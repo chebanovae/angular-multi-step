@@ -1,0 +1,18 @@
+<p> Apply done. </p>
+<p> Process ID : {{ (processState | async).process.id }} </p>
+<p> Description : {{ (processState | async).process.description }} </p>
+<p> Status : {{ (processState | async).process.status }} </p>
+<p> Result : {{ (processState | async).process.result.rc }} - {{ (processState | async).process.result.message }} </p>
+<p> Holdadata : {{ (processState | async).process.holddata }} </p>
+<div class="row">
+  <div class="col-md-6">
+    <button
+      routerLink="/process"
+      class="btn btn-primary"
+      type="button"
+      (click)="onResetProcess()">
+      Close
+    </button>
+  </div>
+</div>
+
