@@ -7,6 +7,7 @@ import * as ProcessActions from './store/process.actions';
 import {Observable} from 'rxjs/Observable';
 import {Process} from './model/process.model';
 import {ActivatedRoute, Router} from '@angular/router';
+import {isNullOrUndefined} from "util";
 
 @Component({
   selector: 'app-process',

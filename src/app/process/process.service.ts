@@ -16,6 +16,11 @@ export class ProcessService {
       ProcessStatus.NOT_STARTED,
       'Apply process for ' + processInput.csi + ':' + processInput.zone,
       ['holddata 1'],
+      [
+        {data: [], canBack: false, canNext: true},
+        {data: [], canBack: true, canNext: true}
+      ],
+      1,
       {rc: 2, message: 'Process has been created. Initial apply check failed'}
     );
   }
@@ -26,6 +31,11 @@ export class ProcessService {
       ProcessStatus.IN_PROGRESS,
       'Apply process for ' + this.processInput.csi + ':' + this.processInput.zone,
       ['holddata 1', 'holddata 2', 'holddata 3'],
+      [
+        {data: [], canBack: false, canNext: true},
+        {data: [], canBack: true, canNext: true}
+      ],
+      1,
       {rc: 8, message: 'Apply check failed, resolve holddata'}
     );
   }
@@ -36,6 +46,11 @@ export class ProcessService {
       ProcessStatus.IN_PROGRESS,
       'Apply process for ' + this.processInput.csi + ':' + this.processInput.zone,
       ['holddata 1', 'holddata 2', 'holddata 3', 'holddata 4', 'holddata5'],
+      [
+        {data: [], canBack: false, canNext: true},
+        {data: [], canBack: true, canNext: true}
+      ],
+      1,
       {rc: 8, message: 'Apply check failed, resolve holddata'}
     );
   }
@@ -46,6 +61,11 @@ export class ProcessService {
       ProcessStatus.IN_PROGRESS,
       'Apply process for ' + this.processInput.csi + ':' + this.processInput.zone,
       [],
+      [
+        {data: [], canBack: false, canNext: true},
+        {data: [], canBack: true, canNext: true}
+      ],
+      1,
       {rc: 0, message: 'Apply check done'}
     );
   }
@@ -56,6 +76,12 @@ export class ProcessService {
       ProcessStatus.DONE,
       'Apply process for ' + this.processInput.csi + ':' + this.processInput.zone,
       [],
+      [
+        {data: [], canBack: false, canNext: true},
+        {data: [], canBack: true, canNext: true},
+        {data: [], canBack: false, canNext: true}
+      ],
+      2,
       {rc: 0, message: 'Apply done'}
     );
   }
