@@ -1,0 +1,13 @@
+<p> Holdadata : {{ step.data.postholddata }} </p>
+<p> Step Result : {{ step.result.rc }} - {{ step.result.message }} </p>
+<div class="row">
+  <div class="col-md-6">
+    <button
+      class="btn btn-primary"
+      type="button"
+      (click)="onDone()">
+      Close
+    </button>
+  </div>
+</div>
+

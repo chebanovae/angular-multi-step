@@ -1,3 +1,4 @@
+<p *ngIf="step && step.result"> Step Result : {{ step.result.rc }} - {{ step.result.message }} </p>
 <div class="row">
   <div class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset-2">
     <form (ngSubmit)="onSubmit()" #processForm="ngForm">
@@ -7,7 +8,7 @@
           type="text"
           id="csi"
           class="form-control"
-          [(ngModel)]="processInput.csi"
+          [(ngModel)]="csi"
           name="csi"
           required>
       </div>
@@ -17,17 +18,16 @@
           type="text"
           id="zone"
           class="form-control"
-          [(ngModel)]="processInput.zone"
+          [(ngModel)]="zone"
           name="zone"
           required>
       </div>
       <div class="row">
         <div class="col-md-6">
           <button
-            routerLink="/process"
             class="btn btn-primary"
             type="button"
-            (click)="onResetProcess()">
+            (click)="onCancel()">
             Cancel
           </button>
           <button

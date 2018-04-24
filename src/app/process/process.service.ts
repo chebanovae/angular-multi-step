@@ -1,88 +1,108 @@
-import {Process} from './model/process.model';
-import {ProcessStatus} from './model/process-status.enum';
-import {ProcessInput} from './model/process-input.model';
+import {Process, ProcessStatus} from './model/process.model';
+import {DoneStepModel, HolddataStepModel, ProcessStep, StartStepModel, StepType} from './model/process-steps.model';
 
 export class ProcessService {
 
-  private processInput: ProcessInput;
+  private csi: string;
+  private zone: string;
   private processId: string;
+  private steps: Map<StepType, ProcessStep> = new Map();
 
-  postProcess(processInput: ProcessInput) {
-    console.log('Create process from csi ' + processInput.csi + ' and zone ' + processInput.zone);
-    this.processInput = processInput;
+  postProcess(csi: string, zone: string) {
     this.processId = (Math.random() * 1000000).toString().substring(1, 6);
-    return new Process(
-      this.processId,
-      ProcessStatus.NOT_STARTED,
-      'Apply process for ' + processInput.csi + ':' + processInput.zone,
-      ['holddata 1'],
-      [
-        {data: [], canBack: false, canNext: true},
-        {data: [], canBack: true, canNext: true}
-      ],
-      1,
-      {rc: 2, message: 'Process has been created. Initial apply check failed'}
-    );
+    this.csi = csi;
+    this.zone = zone;
+    console.log('csi:zone:id=' + this.csi + ':' + this.zone + ':' + this.processId);
+    const stepsM: Map<StepType, ProcessStep> = new Map();
+    // Define steps model
+    if (zone.startsWith('E')) {
+      this.steps.set(StepType.START, this.getStartStepError());
+    } else if (zone.startsWith('RC')) {
+      this.steps.set(StepType.START, this.getStartStepRC());
+    } else  {
+      this.steps.set(StepType.START, this.getStartStepSuccess());
+      this.steps.set(StepType.HOLDDATA, this.getHolddataStep1());
+    }
+
+    console.log(stepsM);
+    return new Process(this.processId, 'Apply process for ' + this.csi + ':' + this.zone,
+      this.steps, ProcessStatus.NOT_STARTED, {rc: 0, message: '0'});
   }
 
   getProcessHolddata1() {
-    return new Process(
-      this.processId,
-      ProcessStatus.IN_PROGRESS,
-      'Apply process for ' + this.processInput.csi + ':' + this.processInput.zone,
-      ['holddata 1', 'holddata 2', 'holddata 3'],
-      [
-        {data: [], canBack: false, canNext: true},
-        {data: [], canBack: true, canNext: true}
-      ],
-      1,
-      {rc: 8, message: 'Apply check failed, resolve holddata'}
-    );
+    this.steps.set(StepType.START, this.getStartStepSuccess());
+    this.steps.set(StepType.HOLDDATA, this.getHolddataStep1());
+
+    return new Process(this.processId, 'Apply process for ' + this.csi + ':' + this.zone,
+      this.steps, ProcessStatus.IN_PROGRESS, {rc: 8, message: 'Resolve holddata'});
   }
 
   getProcessHolddata2() {
-    return new Process(
-      this.processId,
-      ProcessStatus.IN_PROGRESS,
-      'Apply process for ' + this.processInput.csi + ':' + this.processInput.zone,
-      ['holddata 1', 'holddata 2', 'holddata 3', 'holddata 4', 'holddata5'],
-      [
-        {data: [], canBack: false, canNext: true},
-        {data: [], canBack: true, canNext: true}
-      ],
-      1,
-      {rc: 8, message: 'Apply check failed, resolve holddata'}
-    );
+    this.steps.set(StepType.START, this.getStartStepSuccess());
+    this.steps.set(StepType.HOLDDATA, this.getHolddataStep2());
+
+    return new Process(this.processId, 'Apply process for ' + this.csi + ':' + this.zone,
+      this.steps, ProcessStatus.IN_PROGRESS, {rc: 8, message: 'Resolve holddata'});
   }
 
   getProcessResolved() {
-    return new Process(
-      this.processId,
-      ProcessStatus.IN_PROGRESS,
-      'Apply process for ' + this.processInput.csi + ':' + this.processInput.zone,
-      [],
-      [
-        {data: [], canBack: false, canNext: true},
-        {data: [], canBack: true, canNext: true}
-      ],
-      1,
-      {rc: 0, message: 'Apply check done'}
-    );
+    this.steps.set(StepType.START, this.getStartStepSuccess());
+    this.steps.set(StepType.HOLDDATA, this.getHolddataStepResolved());
+
+    return new Process(this.processId, 'Apply process for ' + this.csi + ':' + this.zone,
+      this.steps, ProcessStatus.IN_PROGRESS, {rc: 0, message: 'Apply check done'});
   }
 
   getProcessDone() {
-    return new Process(
-      this.processId,
-      ProcessStatus.DONE,
-      'Apply process for ' + this.processInput.csi + ':' + this.processInput.zone,
-      [],
-      [
-        {data: [], canBack: false, canNext: true},
-        {data: [], canBack: true, canNext: true},
-        {data: [], canBack: false, canNext: true}
-      ],
-      2,
-      {rc: 0, message: 'Apply done'}
-    );
+    this.steps.set(StepType.START, this.getStartStepSuccess());
+    this.steps.set(StepType.HOLDDATA, this.getHolddataStepResolved());
+    this.steps.set(StepType.DONE, this.getDoneStep());
+
+    return new Process(this.processId, 'Apply process for ' + this.csi + ':' + this.zone,
+      this.steps, ProcessStatus.DONE, {rc: 0, message: 'Apply done'});
   }
+
+  getStartStepSuccess() {
+    return new StartStepModel(
+      {csi: this.csi, zone: this.zone},
+      {rc: 0, message: 'Initialization Done. Start Apply check'});
+  }
+
+  getStartStepRC() {
+    return new StartStepModel(
+      {csi: this.csi, zone: this.zone},
+      {rc: 12, message: 'Initialization Done. Start Apply check'});
+  }
+
+  getStartStepError() {
+    return new StartStepModel(
+      {csi: this.csi, zone: this.zone},
+      {rc: 0, message: 'Initialization failed. CSI not found'},
+      'Something went wrong');
+  }
+
+  getHolddataStep1() {
+    return new HolddataStepModel(
+      {holddata: ['holddata 1', 'holddata 2', 'holddata 3'], postholddata: []},
+      {rc: 4, message: 'Apply check failed. Resolve holddata'});
+  }
+
+  getHolddataStep2() {
+    return new HolddataStepModel(
+      {holddata: ['holddata 1', 'holddata 2', 'holddata 3', 'holddata 4', 'holddata 5'], postholddata: []},
+      {rc: 4, message: 'Apply check failed. Resolve holddata'});
+  }
+
+  getHolddataStepResolved() {
+    return new HolddataStepModel(
+      {holddata: [], postholddata: ['holddata 1', 'holddata 2']},
+      {rc: 0, message: 'Apply check done'});
+  }
+
+  getDoneStep() {
+    return new DoneStepModel(
+      {postholddata: ['holddata 1', 'holddata 2']},
+      {rc: 0, message: 'Apply done'});
+  }
+
 }

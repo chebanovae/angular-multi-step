@@ -6,6 +6,7 @@ import * as fromProcess from '../process/store/process.reducers';
 export interface AppState {
   processState: ProcessState;
 }
+
 export interface ProcessState {
   process: Process;
 }

@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ProcessApplyComponent } from './process-apply.component';
+import { StepStartComponent } from './step-start.component';
 
-describe('ProcessApplyComponent', () => {
-  let component: ProcessApplyComponent;
-  let fixture: ComponentFixture<ProcessApplyComponent>;
+describe('StepStartComponent', () => {
+  let component: StepStartComponent;
+  let fixture: ComponentFixture<StepStartComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ProcessApplyComponent ]
+      declarations: [ StepStartComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ProcessApplyComponent);
+    fixture = TestBed.createComponent(StepStartComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

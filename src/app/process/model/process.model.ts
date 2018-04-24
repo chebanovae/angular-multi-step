@@ -1,14 +1,23 @@
-import {ProcessResult} from './process-result.model';
-import {ProcessStatus} from './process-status.enum';
-import {ProcessStep} from './process-step.model';
+import {ProcessStep, StepType} from './process-steps.model';
+
+export enum ProcessStatus {
+  NOT_STARTED = 1,
+  IN_PROGRESS = 2,
+  DONE = 3
+}
+
+export class ProcessResult {
+  rc: number;
+  message: string;
+}
 
 export class Process {
 
   constructor(public id: string,
-              public status: ProcessStatus,
               public description: string,
-              public holddata: string[],
-              public steps: ProcessStep[],
-              public currentStep: number,
-              public result: ProcessResult) { }
+              public steps:  Map<StepType, ProcessStep>,
+              public status: ProcessStatus,
+              public result: ProcessResult,
+              public error?: string) { }
 }
+

@@ -1,6 +1,13 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col-md-12" >
+      <div *ngIf="process">
+        <p> Apply Wizard. [Process ID : {{ process?.id }}]</p>
+        <p> Description : {{ process?.description }} | Status : {{ process?.status }} </p>
+      </div>
+      <div *ngIf="!process">
+        <p> Input data to start Apply Wizard</p>
+      </div>
       <router-outlet></router-outlet>
     </div>
   </div>

@@ -1,0 +1,28 @@
+<p> Holddata : {{ step.data.holddata }} </p>
+<p> Post Holddata : {{ step.data.postholddata }} </p>
+<p> Step Result : {{ step.result.rc }} - {{ step.result.message }} </p>
+<div class="row">
+  <div class="col-md-6">
+    <button
+      class="btn btn-primary"
+      type="button"
+      (click)="onBack()">
+      Back
+    </button>
+    <button
+      class="btn btn-info"
+      type="button"
+      (click)="onRefresh()"
+      [disabled]="step.result.rc == 0">
+      Apply check
+    </button>
+    <button
+      class="btn btn-success"
+      type="button"
+      [disabled]="step.result.rc > 0"
+      (click)="onApply()">
+      Apply
+    </button>
+  </div>
+</div>
+
