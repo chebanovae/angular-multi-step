@@ -1,3 +1,4 @@
+<h2>Resolve Holddata</h2>
 <p> Holddata : {{ step.data.holddata }} </p>
 <p> Post Holddata : {{ step.data.postholddata }} </p>
 <p> Step Result : {{ step.result.rc }} - {{ step.result.message }} </p>
@@ -6,20 +7,20 @@
     <button
       class="btn btn-primary"
       type="button"
+      [disabled]="!step.allowBack"
       (click)="onBack()">
       Back
     </button>
     <button
       class="btn btn-info"
       type="button"
-      (click)="onRefresh()"
-      [disabled]="step.result.rc == 0">
+      (click)="onRefresh()">
       Apply check
     </button>
     <button
       class="btn btn-success"
       type="button"
-      [disabled]="step.result.rc > 0"
+      [disabled]="!step.allowNext"
       (click)="onApply()">
       Apply
     </button>

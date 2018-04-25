@@ -7,9 +7,12 @@ import {StepHolddataComponent} from './steps/step-holddata/step-holddata.compone
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {ProcessComponent} from './process.component';
-import {ProcessDeactivateGuard} from './guards/process-deactivate-guard.service';
+import {StepDeactivateGuard} from './guards/step-deactivate-guard.service';
 import { StepErrorComponent } from './steps/step-error/step-error.component';
-import {StepActivateGuard} from "./guards/step-activate-guard.service";
+import {StepActivateGuard} from './guards/step-activate-guard.service';
+import {EffectsModule} from '@ngrx/effects';
+import {ProcessEffects} from './store/process.effects';
+import {ProcessService} from './process.service';
 
 @NgModule({
   declarations: [
@@ -22,11 +25,13 @@ import {StepActivateGuard} from "./guards/step-activate-guard.service";
   imports: [
     ProcessRoutingModule,
     CommonModule,
-    FormsModule
+    FormsModule,
+    EffectsModule.forRoot([ProcessEffects])
   ],
   providers: [
-    ProcessDeactivateGuard,
-    StepActivateGuard
+    StepDeactivateGuard,
+    StepActivateGuard,
+    ProcessService
   ]
 })
 export class ProcessModule {

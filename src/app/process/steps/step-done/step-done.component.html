@@ -1,3 +1,4 @@
+<h2>Apply Process Finished</h2>
 <p> Holdadata : {{ step.data.postholddata }} </p>
 <p> Step Result : {{ step.result.rc }} - {{ step.result.message }} </p>
 <div class="row">
@@ -5,6 +6,7 @@
     <button
       class="btn btn-primary"
       type="button"
+      [disabled]="!step.allowNext"
       (click)="onDone()">
       Close
     </button>

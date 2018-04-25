@@ -3,10 +3,10 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {Subscription} from 'rxjs/Subscription';
 
-import * as fromAppStore from '../../../store/app.states';
 import * as ProcessActions from '../../store/process.actions';
 import {Process} from '../../model/process.model';
-import {DoneStepModel, ProcessStep, StepType} from '../../model/process-steps.model';
+import {DoneStepModel, ProcessStep, StepType} from '../../model/process-step.model';
+import * as fromApp from '../../../store/app.states';
 
 @Component({
   selector: 'app-process-done',
@@ -18,12 +18,12 @@ export class StepDoneComponent implements OnInit, OnDestroy {
 
   constructor(protected route: ActivatedRoute,
               protected router: Router,
-              protected store: Store<fromAppStore.AppState>) {
+              protected store: Store<fromApp.AppState>) {
   }
 
   ngOnInit() {
     this.subscription = this.store.select('processState')
-      .map((data: fromAppStore.ProcessState) => data ? data.process : undefined)
+      .map((data) => data ? data.process : undefined)
       .map((data: Process) => data ? data.steps : undefined)
       .subscribe((steps: Map<StepType, ProcessStep>) => {
         console.log('StepDoneComponent.ngOnInit - getting fresh step');

@@ -4,11 +4,11 @@ import {Store} from '@ngrx/store';
 import {Subscription} from 'rxjs/Subscription';
 import 'rxjs/add/operator/map';
 
-import * as fromAppStore from '../../../store/app.states';
 import * as ProcessActions from '../../store/process.actions';
 import {ProcessService} from '../../process.service';
-import {HolddataStepModel, ProcessStep, StepType} from '../../model/process-steps.model';
+import {HolddataStepModel, ProcessStep, StepType} from '../../model/process-step.model';
 import {Process} from '../../model/process.model';
+import * as fromApp from '../../../store/app.states';
 
 @Component({
   selector: 'app-process-step',
@@ -23,16 +23,17 @@ export class StepHolddataComponent implements OnInit, OnDestroy  {
   constructor(protected route: ActivatedRoute,
               protected router: Router,
               protected processService: ProcessService,
-              protected store: Store<fromAppStore.AppState>) {
+              protected store: Store<fromApp.AppState>) {
   }
 
   ngOnInit() {
     this.subscription = this.store.select('processState')
-      .map((data: fromAppStore.ProcessState) => data ? data.process : undefined)
+      .map((data) => data ? data.process : undefined)
       .map((data: Process) => data ? data.steps : undefined)
       .subscribe((steps: Map<StepType, ProcessStep>) => {
-        console.log('StepHolddataComponent.ngOnInit - getting fresh step');
         this.step = steps ? steps.get(StepType.HOLDDATA) : undefined;
+        console.log('StepHolddataComponent.ngOnInit - getting fresh step');
+        console.log(this.step);
       });
   }
 
@@ -41,25 +42,11 @@ export class StepHolddataComponent implements OnInit, OnDestroy  {
   }
 
   onRefresh() {
-    let process;
-    switch (this.refreshCounter) {
-      case 0:
-        process = this.processService.getProcessHolddata1();
-        break;
-      case 1:
-        process = this.processService.getProcessHolddata2();
-        break;
-      default:
-        process = this.processService.getProcessResolved();
-    }
-    this.refreshCounter = this.refreshCounter > 2 ? this.refreshCounter = 0 : this.refreshCounter = this.refreshCounter + 1;
-
-    this.store.dispatch(new ProcessActions.UpdateProcess(process));
+    this.store.dispatch(new ProcessActions.GetProcess());
   }
 
   onApply() {
-    const process = this.processService.getProcessDone();
-    this.store.dispatch(new ProcessActions.UpdateProcess(process));
+    this.store.dispatch(new ProcessActions.PutProcess());
     if (this.step.error) {
       this.router.navigate(['../error'], {relativeTo: this.route});
     } else if (this.step.result.rc === 0) {

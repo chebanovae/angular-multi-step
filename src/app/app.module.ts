@@ -9,7 +9,6 @@ import {AppRoutingModule} from './app-routing.module';
 import {HomeComponent} from './home/home.component';
 import {reducers} from './store/app.states';
 
-
 @NgModule(<NgModule>{
   declarations: [
     AppComponent,
@@ -19,9 +18,9 @@ import {reducers} from './store/app.states';
     BrowserModule,
     AppRoutingModule,
     StoreModule.forRoot(reducers),
+
     !environment.production ? StoreDevtoolsModule.instrument() : []
   ],
-  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

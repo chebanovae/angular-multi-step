@@ -3,12 +3,11 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 import 'rxjs/add/operator/map';
 
-import * as fromAppStore from '../../../store/app.states';
 import * as ProcessActions from '../../store/process.actions';
-import {ProcessService} from '../../process.service';
 import {Subscription} from 'rxjs/Subscription';
-import {ProcessStep, StepType} from '../../model/process-steps.model';
+import {ProcessStep, StepType} from '../../model/process-step.model';
 import {Process} from '../../model/process.model';
+import * as fromApp from '../../../store/app.states';
 
 @Component({
   selector: 'app-process-start',
@@ -22,13 +21,12 @@ export class StepStartComponent implements OnInit, OnDestroy {
 
   constructor(protected route: ActivatedRoute,
               protected router: Router,
-              protected processService: ProcessService,
-              protected store: Store<fromAppStore.AppState>) {
+              protected store: Store<fromApp.AppState>) {
   }
 
   ngOnInit() {
     this.subscription = this.store.select('processState')
-      .map((data: fromAppStore.ProcessState) => data ? data.process : undefined)
+      .map((data) => data ? data.process : undefined)
       .map((data: Process) => data ? data.steps : undefined)
       .subscribe((steps: Map<StepType, ProcessStep>) => {
           console.log('StepStartComponent.ngOnInit - getting fresh step');
@@ -43,14 +41,13 @@ export class StepStartComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
-    console.log('StepStartComponent.onSubmit: ' + this.csi + ' ' + this.zone);
-    const p = this.processService.postProcess(this.csi, this.zone);
-    this.store.dispatch(new ProcessActions.UpdateProcess(p));
+    this.store.dispatch(new ProcessActions.PostProcess({csi: this.csi, zone: this.zone}));
 
     if (this.step.error) {
       this.router.navigate(['../error'], {relativeTo: this.route});
     } else if (this.step.result.rc === 0) {
-      this.router.navigate(['../apply'], {relativeTo: this.route});
+      console.log('Navigate to holddata');
+      this.router.navigate(['../holddata'], {relativeTo: this.route});
     }
   }
 

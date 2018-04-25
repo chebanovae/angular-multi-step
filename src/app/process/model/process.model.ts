@@ -1,4 +1,4 @@
-import {ProcessStep, StepType} from './process-steps.model';
+import {ProcessStep, StepType} from './process-step.model';
 
 export enum ProcessStatus {
   NOT_STARTED = 1,
@@ -11,8 +11,8 @@ export class ProcessResult {
   message: string;
 }
 
-export class Process {
 
+export class Process {
   constructor(public id: string,
               public description: string,
               public steps:  Map<StepType, ProcessStep>,
@@ -20,4 +20,3 @@ export class Process {
               public result: ProcessResult,
               public error?: string) { }
 }
-

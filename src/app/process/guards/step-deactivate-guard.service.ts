@@ -6,18 +6,18 @@ import 'rxjs/add/operator/take';
 import 'rxjs/add/operator/map';
 
 import {ProcessComponent} from '../process.component';
-import * as fromAppStore from '../../store/app.states';
+import * as fromApp from '../../store/app.states';
 
 
 @Injectable()
-export class ProcessDeactivateGuard implements CanDeactivate<ProcessComponent> {
+export class StepDeactivateGuard implements CanDeactivate<ProcessComponent> {
 
-  constructor(private store: Store<fromAppStore.AppState>) {}
+  constructor(private store: Store<fromApp.AppState>) {}
 
   canDeactivate(component: ProcessComponent): Observable<boolean> | Promise<boolean> | boolean {
     return this.store.select('processState')
       .take(1)
-      .map((data: fromAppStore.ProcessState) => {
+      .map((data) => {
         return true;
       });
   }
