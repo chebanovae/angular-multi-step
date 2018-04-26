@@ -15,7 +15,7 @@ export class StepActivateGuard implements CanActivate {
     return this.store.select('processState')
       .take(1)
       .map((data) => {
-        return !(data === undefined);
+        return !(data.process === undefined);
       });
   }
 }

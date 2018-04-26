@@ -18,7 +18,6 @@ export class ProcessComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.store.dispatch(new ProcessActions.PostProcess({csi: '', zone: ''}));
     this.subscription = this.store.select('processState')
       .subscribe((data) => {
         this.process = data.process;

@@ -1,9 +1,9 @@
 import {NgModule} from '@angular/core';
 
 import {StepStartComponent} from './steps/step-start/step-start.component';
-import {StepDoneComponent} from './steps/step-done/step-done.component';
+import {StepApplyComponent} from './steps/step-apply/step-apply.component';
 import {ProcessRoutingModule} from './process-routing.module';
-import {StepHolddataComponent} from './steps/step-holddata/step-holddata.component';
+import {StepApplyCheckComponent} from './steps/step-apply-check/step-apply-check.component';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {ProcessComponent} from './process.component';
@@ -18,8 +18,8 @@ import {ProcessService} from './process.service';
   declarations: [
     ProcessComponent,
     StepStartComponent,
-    StepHolddataComponent,
-    StepDoneComponent,
+    StepApplyCheckComponent,
+    StepApplyComponent,
     StepErrorComponent
   ],
   imports: [

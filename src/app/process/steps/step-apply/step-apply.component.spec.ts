@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { StepHolddataComponent } from './step-holddata.component';
+import { StepApplyComponent } from './step-apply.component';
 
-describe('StepHolddataComponent', () => {
-  let component: StepHolddataComponent;
-  let fixture: ComponentFixture<StepHolddataComponent>;
+describe('StepApplyComponent', () => {
+  let component: StepApplyComponent;
+  let fixture: ComponentFixture<StepApplyComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ StepHolddataComponent ]
+      declarations: [ StepApplyComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(StepHolddataComponent);
+    fixture = TestBed.createComponent(StepApplyComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

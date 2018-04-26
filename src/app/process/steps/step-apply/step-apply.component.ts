@@ -9,10 +9,10 @@ import {DoneStepModel, ProcessStep, StepType} from '../../model/process-step.mod
 import * as fromApp from '../../../store/app.states';
 
 @Component({
-  selector: 'app-process-done',
-  templateUrl: './step-done.component.html'
+  selector: 'app-process-apply',
+  templateUrl: './step-apply.component.html'
 })
-export class StepDoneComponent implements OnInit, OnDestroy {
+export class StepApplyComponent implements OnInit, OnDestroy {
   step: DoneStepModel;
   subscription: Subscription;
 
@@ -26,7 +26,7 @@ export class StepDoneComponent implements OnInit, OnDestroy {
       .map((data) => data ? data.process : undefined)
       .map((data: Process) => data ? data.steps : undefined)
       .subscribe((steps: Map<StepType, ProcessStep>) => {
-        console.log('StepDoneComponent.ngOnInit - getting fresh step');
+        console.log('StepApplyComponent.ngOnInit - getting fresh step');
         this.step = steps ? steps.get(StepType.HOLDDATA) : undefined;
       });
   }

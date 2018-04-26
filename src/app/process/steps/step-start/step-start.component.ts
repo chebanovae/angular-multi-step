@@ -25,6 +25,7 @@ export class StepStartComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.store.dispatch(new ProcessActions.PostProcess({csi: '', zone: ''}));
     this.subscription = this.store.select('processState')
       .map((data) => data ? data.process : undefined)
       .map((data: Process) => data ? data.steps : undefined)
@@ -46,7 +47,6 @@ export class StepStartComponent implements OnInit, OnDestroy {
     if (this.step.error) {
       this.router.navigate(['../error'], {relativeTo: this.route});
     } else if (this.step.result.rc === 0) {
-      console.log('Navigate to holddata');
       this.router.navigate(['../holddata'], {relativeTo: this.route});
     }
   }

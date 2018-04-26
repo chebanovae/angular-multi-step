@@ -11,18 +11,16 @@ import {Process} from '../../model/process.model';
 import * as fromApp from '../../../store/app.states';
 
 @Component({
-  selector: 'app-process-step',
-  templateUrl: './step-holddata.component.html'
+  selector: 'app-process-apply-check',
+  templateUrl: './step-apply-check.component.html'
 })
-export class StepHolddataComponent implements OnInit, OnDestroy  {
-  refreshCounter = 0;
+export class StepApplyCheckComponent implements OnInit, OnDestroy  {
 
   step: HolddataStepModel;
   subscription: Subscription;
 
   constructor(protected route: ActivatedRoute,
               protected router: Router,
-              protected processService: ProcessService,
               protected store: Store<fromApp.AppState>) {
   }
 
@@ -32,7 +30,7 @@ export class StepHolddataComponent implements OnInit, OnDestroy  {
       .map((data: Process) => data ? data.steps : undefined)
       .subscribe((steps: Map<StepType, ProcessStep>) => {
         this.step = steps ? steps.get(StepType.HOLDDATA) : undefined;
-        console.log('StepHolddataComponent.ngOnInit - getting fresh step');
+        console.log('StepApplyCheckComponent.ngOnInit - getting fresh step');
         console.log(this.step);
       });
   }

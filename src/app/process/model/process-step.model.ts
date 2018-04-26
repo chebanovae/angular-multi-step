@@ -1,4 +1,4 @@
-import {ProcessResult} from './process.model';
+import {ProcessResult, ProcessStatus} from './process.model';
 
 export enum StepType {
   START,
@@ -11,6 +11,7 @@ export interface ProcessStep {
   data: any;
   allowNext: boolean;
   allowBack: boolean;
+  status: ProcessStatus;
   result: ProcessResult;
   error?: string;
 }
@@ -19,7 +20,7 @@ export class StartStepModel implements ProcessStep {
   public readonly type: StepType = StepType.START;
 
   constructor(public data: { csi: string, zone: string},
-              public  allowNext: boolean, public allowBack: boolean,
+              public  allowNext: boolean, public allowBack: boolean, public status: ProcessStatus,
               public result: ProcessResult, public error?: string) { }
 }
 
@@ -27,7 +28,7 @@ export class HolddataStepModel implements ProcessStep {
   public readonly type: StepType = StepType.HOLDDATA;
 
   constructor(public data: { holddata: string[], postholddata: string[]},
-              public  allowNext: boolean, public allowBack: boolean,
+              public  allowNext: boolean, public allowBack: boolean, public status: ProcessStatus,
               public result: ProcessResult, public error?: string) { }
 }
 
@@ -35,7 +36,7 @@ export class DoneStepModel implements ProcessStep {
   public readonly type: StepType = StepType.DONE;
 
   constructor(public data: { postholddata: string[]},
-              public  allowNext: boolean, public allowBack: boolean,
+              public  allowNext: boolean, public allowBack: boolean, public status: ProcessStatus,
               public result: ProcessResult, public error?: string) { }
 }
 

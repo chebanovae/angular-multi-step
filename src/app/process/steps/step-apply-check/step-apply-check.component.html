@@ -14,7 +14,8 @@
     <button
       class="btn btn-info"
       type="button"
-      (click)="onRefresh()">
+      (click)="onRefresh()"
+      [disabled]="step.allowNext">
       Apply check
     </button>
     <button

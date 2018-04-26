@@ -7,6 +7,7 @@ import 'rxjs/add/operator/map';
 
 import {ProcessComponent} from '../process.component';
 import * as fromApp from '../../store/app.states';
+import * as ProcessActions from "../store/process.actions";
 
 
 @Injectable()
@@ -18,7 +19,12 @@ export class StepDeactivateGuard implements CanDeactivate<ProcessComponent> {
     return this.store.select('processState')
       .take(1)
       .map((data) => {
-        return true;
+        if ((data.process != null) && !confirm('Delete process?')) {
+          return false;
+        } else {
+          this.store.dispatch(new ProcessActions.DeleteProcess());
+          return true;
+        }
       });
   }
 }

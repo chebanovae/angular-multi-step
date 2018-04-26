@@ -82,21 +82,21 @@ export class ProcessService {
   getStartStepSuccess() {
     return new StartStepModel(
       {csi: this.csi, zone: this.zone},
-      true, true,
+      true, true, ProcessStatus.IN_PROGRESS,
       {rc: 0, message: 'Initialization Done. Start Apply check'});
   }
 
   getStartStepRC() {
     return new StartStepModel(
       {csi: this.csi, zone: this.zone},
-      true, true,
+      true, true, ProcessStatus.IN_PROGRESS,
       {rc: 12, message: 'Initialization failed - CSI not found.'});
   }
 
   getStartStepError() {
     return new StartStepModel(
       {csi: this.csi, zone: this.zone},
-      true, true,
+      true, true, ProcessStatus.IN_PROGRESS,
       {rc: 12, message: 'Initialization failed - SMPE error'},
       'Something went wrong');
   }
@@ -104,32 +104,28 @@ export class ProcessService {
   getHolddataStep1() {
     return new HolddataStepModel(
       {holddata: ['holddata 1', 'holddata 2', 'holddata 3'], postholddata: []},
-      false, true,
+      false, true, ProcessStatus.IN_PROGRESS,
       {rc: 4, message: 'Apply check failed. Resolve holddata'});
   }
 
   getHolddataStep2() {
     return new HolddataStepModel(
       {holddata: ['holddata 1', 'holddata 2', 'holddata 3', 'holddata 4', 'holddata 5'], postholddata: []},
-      false, true,
+      false, true,  ProcessStatus.IN_PROGRESS,
       {rc: 4, message: 'Apply check failed. Resolve holddata'});
   }
 
   getHolddataStepResolved() {
     return new HolddataStepModel(
       {holddata: [], postholddata: ['holddata 1', 'holddata 2']},
-      true, true,
+      true, true, ProcessStatus.IN_PROGRESS,
       {rc: 0, message: 'Apply check done'});
   }
 
   getDoneStep() {
     return new DoneStepModel(
       {postholddata: ['holddata 1', 'holddata 2']},
-      true, false,
+      true, false, ProcessStatus.IN_PROGRESS,
       {rc: 0, message: 'Apply done'});
   }
-
-
-
-
 }
