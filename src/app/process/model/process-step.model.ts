@@ -2,8 +2,23 @@ import {ProcessResult, ProcessStatus} from './process.model';
 
 export enum StepType {
   START,
-  HOLDDATA,
-  DONE
+  APPLY_CHECK,
+  APPLY
+}
+
+export namespace StepType {
+  export function toRoute(step: StepType): string {
+    switch (step) {
+      case StepType.START:
+        return 'start';
+      case StepType.APPLY_CHECK:
+        return 'applyCheck';
+      case StepType.APPLY:
+        return 'apply';
+      default:
+        return '';
+    }
+  }
 }
 
 export interface ProcessStep {
@@ -25,7 +40,7 @@ export class StartStepModel implements ProcessStep {
 }
 
 export class HolddataStepModel implements ProcessStep {
-  public readonly type: StepType = StepType.HOLDDATA;
+  public readonly type: StepType = StepType.APPLY_CHECK;
 
   constructor(public data: { holddata: string[], postholddata: string[]},
               public  allowNext: boolean, public allowBack: boolean, public status: ProcessStatus,
@@ -33,7 +48,7 @@ export class HolddataStepModel implements ProcessStep {
 }
 
 export class DoneStepModel implements ProcessStep {
-  public readonly type: StepType = StepType.DONE;
+  public readonly type: StepType = StepType.APPLY;
 
   constructor(public data: { postholddata: string[]},
               public  allowNext: boolean, public allowBack: boolean, public status: ProcessStatus,

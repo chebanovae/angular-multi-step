@@ -5,7 +5,6 @@ import {Subscription} from 'rxjs/Subscription';
 import 'rxjs/add/operator/map';
 
 import * as ProcessActions from '../../store/process.actions';
-import {ProcessService} from '../../process.service';
 import {HolddataStepModel, ProcessStep, StepType} from '../../model/process-step.model';
 import {Process} from '../../model/process.model';
 import * as fromApp from '../../../store/app.states';
@@ -15,7 +14,7 @@ import * as fromApp from '../../../store/app.states';
   templateUrl: './step-apply-check.component.html'
 })
 export class StepApplyCheckComponent implements OnInit, OnDestroy  {
-
+  processId: string;
   step: HolddataStepModel;
   subscription: Subscription;
 
@@ -27,9 +26,12 @@ export class StepApplyCheckComponent implements OnInit, OnDestroy  {
   ngOnInit() {
     this.subscription = this.store.select('processState')
       .map((data) => data ? data.process : undefined)
-      .map((data: Process) => data ? data.steps : undefined)
+      .map((data: Process) => {
+        this.processId = data.id;
+        return data ? data.steps : undefined;
+      })
       .subscribe((steps: Map<StepType, ProcessStep>) => {
-        this.step = steps ? steps.get(StepType.HOLDDATA) : undefined;
+        this.step = steps ? steps.get(StepType.APPLY_CHECK) : undefined;
         console.log('StepApplyCheckComponent.ngOnInit - getting fresh step');
         console.log(this.step);
       });
@@ -40,16 +42,16 @@ export class StepApplyCheckComponent implements OnInit, OnDestroy  {
   }
 
   onRefresh() {
-    this.store.dispatch(new ProcessActions.GetProcess());
+    this.store.dispatch(new ProcessActions.GetProcess(this.processId));
   }
 
   onApply() {
-    this.store.dispatch(new ProcessActions.PutProcess());
+    this.store.dispatch(new ProcessActions.PutProcess(this.processId));
     if (this.step.error) {
       this.router.navigate(['../error'], {relativeTo: this.route});
-    } else if (this.step.result.rc === 0) {
-      this.router.navigate(['../done'], {relativeTo: this.route});
-    }
+    } /*else if (this.step.result.rc === 0) {
+      this.router.navigate(['../apply'], {relativeTo: this.route});
+    }*/
   }
 
   onBack() {

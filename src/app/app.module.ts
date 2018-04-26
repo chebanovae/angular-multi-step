@@ -8,6 +8,7 @@ import {AppComponent} from './app.component';
 import {AppRoutingModule} from './app-routing.module';
 import {HomeComponent} from './home/home.component';
 import {reducers} from './store/app.states';
+import {ProcessService} from "./process/process.service";
 
 @NgModule(<NgModule>{
   declarations: [
@@ -21,6 +22,7 @@ import {reducers} from './store/app.states';
 
     !environment.production ? StoreDevtoolsModule.instrument() : []
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  providers: [ProcessService]
 })
 export class AppModule { }

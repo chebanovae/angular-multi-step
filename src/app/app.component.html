@@ -1,11 +1,22 @@
 <!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-  <a routerLink="/" class="navbar-brand">Home</a>
-  <a routerLink="/process/start" class="navbar-brand">Start Apply process</a>
-  <a routerLink="/process/done" class="navbar-brand">Go to Done</a>
-  <h1>
-    Welcome to {{ title }}!
-  </h1>
+<div class="container-fluid">
+<div class="row">
+  <div class="col-md-12">
+    <a routerLink="/home" class="navbar-brand">Home</a>
+    <a routerLink="/process/start" class="navbar-brand">Start Apply process</a>
+    <a routerLink="/process/apply" class="navbar-brand">Go to Done</a>
+    <button class="btn btn-primary" type="button" (click)="onGetApplyCheck1()"> Go to process 1 </button>
+    <button class="btn btn-primary" type="button" (click)="onGetApplyCheck2()"> Go to process 2 </button>
+    <button class="btn btn-primary" type="button" (click)="onGetApply1()"> Go to process 3 </button>
+  </div>
 </div>
-<router-outlet></router-outlet>
 
+<div class="row">
+    <div class="col-md-12">
+      <h3>
+        Welcome to {{ title }}!
+      </h3>
+    </div>
+  </div>
+<router-outlet></router-outlet>
+</div>

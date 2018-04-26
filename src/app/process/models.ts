@@ -36,7 +36,7 @@ export const initDoneProcess: Process = {
       data: { csi: 'PUBLIC.TEST.CSI', zone: 'CAIT01'},
       allowNext: true,
       allowBack: true,
-      status: ProcessStatus.DONE,
+      status: ProcessStatus.APPLY,
       result: { rc: 0, message: 'CSI and zone ok. Proceed to apply check'}
     }
   ],
@@ -53,7 +53,7 @@ export const initFailProcess: Process = {
       data: { csi: 'PUBLIC.TEST.CSI', zone: 'CAIT01'},
       allowNext: true,
       allowBack: true,
-      status: ProcessStatus.DONE,
+      status: ProcessStatus.APPLY,
       result: { rc: 8, message: 'CSI or zone not found. Verify input data'}
     }
   ],
@@ -70,12 +70,12 @@ export const initCrashProcess: Process = {
       data: { csi: 'PUBLIC.TEST.CSI', zone: 'CAIT01'},
       allowNext: true,
       allowBack: true,
-      status: ProcessStatus.DONE,
+      status: ProcessStatus.APPLY,
       result: { rc: 8, message: 'CSI or zone not found. Verify input data'},
       error: 'Initialization went terribly wrong. can\'t proceed'
     }
   ],
-  status: ProcessStatus.DONE,
+  status: ProcessStatus.APPLY,
   result: { rc: -1, message: 'CSI or zone not found. Verify input data'},
   error: 'Initialization went terribly wrong. can\'t proceed'
 };
@@ -89,10 +89,10 @@ export const hd1Process: Process = {
       data: { csi: 'PUBLIC.TEST.CSI', zone: 'CAIT01'},
       allowNext: true,
       allowBack: true,
-      status: ProcessStatus.DONE,
+      status: ProcessStatus.APPLY,
       result: { rc: 0, message: 'CSI and zone ok. Proceed to apply check'}
     },
-    { type: StepType.HOLDDATA,
+    { type: StepType.APPLY_CHECK,
       data: { holdata: [], postholddata: []},
       allowNext: false,
       allowBack: true,
@@ -113,14 +113,14 @@ export const hd1doneProcess: Process = {
       data: { csi: 'PUBLIC.TEST.CSI', zone: 'CAIT01'},
       allowNext: true,
       allowBack: true,
-      status: ProcessStatus.DONE,
+      status: ProcessStatus.APPLY,
       result: { rc: 0, message: 'CSI and zone ok. Proceed to apply check'}
     },
-    { type: StepType.HOLDDATA,
+    { type: StepType.APPLY_CHECK,
       data: { holdata: ['h1', 'h2', 'h3', 'h4'], postholddata: []},
       allowNext: false,
       allowBack: true,
-      status: ProcessStatus.DONE,
+      status: ProcessStatus.APPLY,
       result: { rc: 8, message: 'Apply check done. Resolve holddata'}
     }
   ],
@@ -137,10 +137,10 @@ export const hd2Process: Process = {
       data: { csi: 'PUBLIC.TEST.CSI', zone: 'CAIT01'},
       allowNext: true,
       allowBack: true,
-      status: ProcessStatus.DONE,
+      status: ProcessStatus.APPLY,
       result: { rc: 0, message: 'CSI and zone ok. Proceed to apply check'}
     },
-    { type: StepType.HOLDDATA,
+    { type: StepType.APPLY_CHECK,
       data: { holdata: ['h1', 'h2', 'h3', 'h4', 'h5'], postholddata: []},
       allowNext: false,
       allowBack: true,
@@ -161,14 +161,14 @@ export const hd2DoneProcess: Process = {
       data: { csi: 'PUBLIC.TEST.CSI', zone: 'CAIT01'},
       allowNext: true,
       allowBack: true,
-      status: ProcessStatus.DONE,
+      status: ProcessStatus.APPLY,
       result: { rc: 0, message: 'CSI and zone ok. Proceed to apply check'}
     },
-    { type: StepType.HOLDDATA,
+    { type: StepType.APPLY_CHECK,
       data: { holdata: ['h1', 'h2', 'h3', 'h4', 'h5'], postholddata: []},
       allowNext: false,
       allowBack: true,
-      status: ProcessStatus.DONE,
+      status: ProcessStatus.APPLY,
       result: { rc: 0, message: 'Apply check done. Proceed to apply'}
     }
   ],
@@ -185,17 +185,17 @@ export const applyProcess: Process = {
       data: { csi: 'PUBLIC.TEST.CSI', zone: 'CAIT01'},
       allowNext: true,
       allowBack: true,
-      status: ProcessStatus.DONE,
+      status: ProcessStatus.APPLY,
       result: { rc: 0, message: 'CSI and zone ok. Proceed to apply check'}
     },
-    { type: StepType.HOLDDATA,
+    { type: StepType.APPLY_CHECK,
       data: { holdata: ['h1', 'h2', 'h3', 'h4', 'h5'], postholddata: []},
       allowNext: false,
       allowBack: true,
-      status: ProcessStatus.DONE,
+      status: ProcessStatus.APPLY,
       result: { rc: 0, message: 'Apply check done. Proceed to apply'}
     },
-    { type: StepType.DONE,
+    { type: StepType.APPLY,
       data: { holdata: ['h1', 'h2', 'h3', 'h4', 'h5'], postholddata: []},
       allowNext: false,
       allowBack: true,
@@ -216,25 +216,25 @@ export const applyDoneProcess: Process = {
       data: { csi: 'PUBLIC.TEST.CSI', zone: 'CAIT01'},
       allowNext: true,
       allowBack: true,
-      status: ProcessStatus.DONE,
+      status: ProcessStatus.APPLY,
       result: { rc: 0, message: 'CSI and zone ok. Proceed to apply check'}
     },
-    { type: StepType.HOLDDATA,
+    { type: StepType.APPLY_CHECK,
       data: { holdata: ['h1', 'h2', 'h3', 'h4', 'h5'], postholddata: []},
       allowNext: false,
       allowBack: true,
-      status: ProcessStatus.DONE,
+      status: ProcessStatus.APPLY,
       result: { rc: 0, message: 'Apply check done. Proceed to apply'}
     },
-    { type: StepType.DONE,
+    { type: StepType.APPLY,
       data: { holdata: ['h1', 'h2', 'h3', 'h4', 'h5'], postholddata: ['h1', 'h2']},
       allowNext: false,
       allowBack: true,
-      status: ProcessStatus.DONE,
+      status: ProcessStatus.APPLY,
       result: { rc: -1, message: 'Apply done'}
     }
   ],
-  status: ProcessStatus.DONE,
+  status: ProcessStatus.APPLY,
   result: { rc: 0, message: 'Apply done. Review postholddat. See you next time'}
 };
 

@@ -30,8 +30,7 @@ import {ProcessService} from './process.service';
   ],
   providers: [
     StepDeactivateGuard,
-    StepActivateGuard,
-    ProcessService
+    StepActivateGuard
   ]
 })
 export class ProcessModule {

@@ -40,7 +40,7 @@ export class StepErrorComponent implements OnInit, OnDestroy {
 
   onClose() {
     this.store.dispatch(new ProcessActions.DeleteProcess());
-    this.router.navigate([''], {relativeTo: this.route});
+    this.router.navigate(['/home'], {relativeTo: this.route});
   }
 
 }

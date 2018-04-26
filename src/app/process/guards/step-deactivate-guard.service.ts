@@ -20,9 +20,11 @@ export class StepDeactivateGuard implements CanDeactivate<ProcessComponent> {
       .take(1)
       .map((data) => {
         if ((data.process != null) && !confirm('Delete process?')) {
+          console.log('StepDeactivateGuard: false');
           return false;
         } else {
           this.store.dispatch(new ProcessActions.DeleteProcess());
+          console.log('StepDeactivateGuard: true');
           return true;
         }
       });

@@ -7,8 +7,7 @@ export interface State {
 }
 
 const steps: Map<StepType, ProcessStep> = new Map();
-const emptyProcess = new Process(this.processId, 'Apply process for ' + this.csi + ':' + this.zone,
-  steps, ProcessStatus.NOT_STARTED, {rc: 0, message: '0'});
+const emptyProcess = undefined;
 
 const initialState: State = {
   process: emptyProcess
@@ -16,9 +15,9 @@ const initialState: State = {
 
 export function processReducer(state = initialState , action: processActions.ProcessActions) {
   switch (action.type) {
-    case processActions.ADD_PROCESS:
     case processActions.UPDATE_PROCESS:
-      console.log('Action: ' + action.type);
+      console.log('UPDATE_PROCESS');
+      console.log(action.payload);
       return {
         ...state,
         process: action.payload

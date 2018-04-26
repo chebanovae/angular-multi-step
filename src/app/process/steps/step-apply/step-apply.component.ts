@@ -27,7 +27,7 @@ export class StepApplyComponent implements OnInit, OnDestroy {
       .map((data: Process) => data ? data.steps : undefined)
       .subscribe((steps: Map<StepType, ProcessStep>) => {
         console.log('StepApplyComponent.ngOnInit - getting fresh step');
-        this.step = steps ? steps.get(StepType.HOLDDATA) : undefined;
+        this.step = steps ? steps.get(StepType.APPLY_CHECK) : undefined;
       });
   }
 
@@ -37,6 +37,6 @@ export class StepApplyComponent implements OnInit, OnDestroy {
 
   onDone() {
     this.store.dispatch(new ProcessActions.DeleteProcess());
-    this.router.navigate([''], {relativeTo: this.route});
+    this.router.navigate(['/home']);
   }
 }

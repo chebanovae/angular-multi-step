@@ -25,9 +25,11 @@ export class StepStartComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.store.dispatch(new ProcessActions.PostProcess({csi: '', zone: ''}));
     this.subscription = this.store.select('processState')
-      .map((data) => data ? data.process : undefined)
+      .map((data) => {
+        this.store.dispatch(new ProcessActions.PostProcess({csi: '', zone: ''}));
+        return data.process;
+      })
       .map((data: Process) => data ? data.steps : undefined)
       .subscribe((steps: Map<StepType, ProcessStep>) => {
           console.log('StepStartComponent.ngOnInit - getting fresh step');
@@ -45,16 +47,18 @@ export class StepStartComponent implements OnInit, OnDestroy {
     this.store.dispatch(new ProcessActions.PostProcess({csi: this.csi, zone: this.zone}));
 
     if (this.step.error) {
+      console.log('StepStartComponent.onSubmit - navigate to error');
       this.router.navigate(['../error'], {relativeTo: this.route});
-    } else if (this.step.result.rc === 0) {
-      this.router.navigate(['../holddata'], {relativeTo: this.route});
-    }
+    } /*else if (this.step.result.rc === 0) {
+      console.log('StepStartComponent.onSubmit - navigate to applyCheck');
+      this.router.navigate(['../applyCheck'], {relativeTo: this.route});
+    }*/
   }
 
   onCancel() {
     console.log('StepStartComponent.onCancel');
     this.store.dispatch(new ProcessActions.DeleteProcess());
-    this.router.navigate([''], {relativeTo: this.route});
+    this.router.navigate(['/home']);
   }
 
 }
