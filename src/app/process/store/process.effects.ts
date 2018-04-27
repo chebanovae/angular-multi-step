@@ -10,10 +10,15 @@ import {Process} from '../model/process.model';
 import {ProcessService} from '../process.service';
 import {Injectable} from '@angular/core';
 import * as fromApp from '../../store/app.states';
-import {GetProcess} from './process.actions';
 
+/**
+ * Backend manipulation actions
+ */
 @Injectable()
 export class ProcessEffects {
+  /**
+   * Post data (create new process on backend) and put response into the store
+   */
   @Effect()
   private _postProcess = this.actions$
     .ofType(ProcessActions.POST_PROCESS)
@@ -26,11 +31,14 @@ export class ProcessEffects {
     })
     .map((process: Process) => {
       return {
-        type: ProcessActions.UPDATE_PROCESS,
+        type: ProcessActions.UPDATE_PROCESS_IN_STORE,
         payload: process
       };
     });
 
+  /**
+   * Put data (update existing on backend) and put response into the store
+   */
   @Effect()
   private _putProcess = this.actions$
     .ofType(ProcessActions.PUT_PROCESS)
@@ -38,29 +46,24 @@ export class ProcessEffects {
       console.log('put process: ' + action.payload);
       const process = this.processService.put(action.payload);
       return {
-        type: ProcessActions.UPDATE_PROCESS,
+        type: ProcessActions.UPDATE_PROCESS_IN_STORE,
         payload: process
       };
     });
 
-    // .withLatestFrom(this.store.select('processState'))
-    /*.map(([action, state]) => {
-      console.log('put process: state');
-      console.log(state);
-      return {
-        type: ProcessActions.UPDATE_PROCESS,
-        payload: state.process
-      };
-    });*/
-
+  /**
+   * Get data (process from backend) and put response into the store
+   */
   @Effect()
   private _getProcess = this.actions$
     .ofType(ProcessActions.GET_PROCESS)
     .map((action: ProcessActions.GetProcess) => {
       console.log('get process: ' + action.payload);
-      const process = this.processService.get(action.payload);
+      return this.processService.get(action.payload);
+    })
+    .map((process) => {
       return {
-        type: ProcessActions.UPDATE_PROCESS,
+        type: ProcessActions.UPDATE_PROCESS_IN_STORE,
         payload: process
       };
     });

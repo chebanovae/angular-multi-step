@@ -7,9 +7,13 @@ import 'rxjs/add/operator/map';
 
 import {ProcessComponent} from '../process.component';
 import * as fromApp from '../../store/app.states';
-import * as ProcessActions from "../store/process.actions";
+import * as ProcessActions from '../store/process.actions';
 
-
+/**
+ * CanDeactivate guard for process step components.
+ *
+ * If process in store is not empty, ask user's confirmation to leave the page and delete process from store. *
+ */
 @Injectable()
 export class StepDeactivateGuard implements CanDeactivate<ProcessComponent> {
 
@@ -20,11 +24,9 @@ export class StepDeactivateGuard implements CanDeactivate<ProcessComponent> {
       .take(1)
       .map((data) => {
         if ((data.process != null) && !confirm('Delete process?')) {
-          console.log('StepDeactivateGuard: false');
           return false;
         } else {
-          this.store.dispatch(new ProcessActions.DeleteProcess());
-          console.log('StepDeactivateGuard: true');
+          this.store.dispatch(new ProcessActions.DeleteProcessFromStore());
           return true;
         }
       });

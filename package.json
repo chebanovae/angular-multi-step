@@ -6,7 +6,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build --prod",
-    "test": "ng test",
+    "test": "ng test --coverage",
     "lint": "ng lint",
     "e2e": "ng e2e"
   },
@@ -31,7 +31,7 @@
     "zone.js": "^0.8.14"
   },
   "devDependencies": {
-    "@angular-devkit/core": "^0.5.7",
+    "@angular-devkit/core": "^0.5.9",
     "@angular/cli": "~1.7.2",
     "@angular/compiler-cli": "^4.4.6",
     "@angular/language-service": "^4.4.6",
@@ -48,8 +48,8 @@
     "karma-html-reporter": "^0.2.7",
     "karma-jasmine": "~1.1.0",
     "karma-jasmine-html-reporter": "^0.2.2",
-    "karma-mocha-reporter": "^2.2.5",
     "karma-junit-reporter": "^1.2.0",
+    "karma-mocha-reporter": "^2.2.5",
     "karma-phantomjs-launcher": "^1.0.4",
     "phantomjs": "^2.1.7",
     "phantomjs-prebuilt": "^2.1.16",

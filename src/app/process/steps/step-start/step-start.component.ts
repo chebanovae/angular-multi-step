@@ -1,7 +1,9 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
+import {Router} from '@angular/router';
 import {Store} from '@ngrx/store';
+
 import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/take';
 
 import * as ProcessActions from '../../store/process.actions';
 import {Subscription} from 'rxjs/Subscription';
@@ -9,55 +11,50 @@ import {ProcessStep, StepType} from '../../model/process-step.model';
 import {Process} from '../../model/process.model';
 import * as fromApp from '../../../store/app.states';
 
+/**
+ * UI representation of Start step
+ * This component subscribes to display START step from process
+ */
 @Component({
   selector: 'app-process-start',
   templateUrl: './step-start.component.html'
 })
 export class StepStartComponent implements OnInit, OnDestroy {
   step: ProcessStep;
-  csi: string;
-  zone: string;
   subscription: Subscription;
 
-  constructor(protected route: ActivatedRoute,
-              protected router: Router,
+  constructor(protected router: Router,
               protected store: Store<fromApp.AppState>) {
   }
 
   ngOnInit() {
     this.subscription = this.store.select('processState')
-      .map((data) => {
-        this.store.dispatch(new ProcessActions.PostProcess({csi: '', zone: ''}));
-        return data.process;
-      })
+      .map((data) => data.process)
       .map((data: Process) => data ? data.steps : undefined)
       .subscribe((steps: Map<StepType, ProcessStep>) => {
           console.log('StepStartComponent.ngOnInit - getting fresh step');
           this.step = steps ? steps.get(StepType.START) : undefined;
-          this.csi = this.step ? this.step.data.csi : '';
-          this.zone = this.step ? this.step.data.zone : '';
       });
   }
 
   ngOnDestroy() {
+    console.log('StepStartComponent.ngOnDestroy');
     this.subscription.unsubscribe();
   }
 
-  onSubmit() {
-    this.store.dispatch(new ProcessActions.PostProcess({csi: this.csi, zone: this.zone}));
-
-    if (this.step.error) {
-      console.log('StepStartComponent.onSubmit - navigate to error');
-      this.router.navigate(['../error'], {relativeTo: this.route});
-    } /*else if (this.step.result.rc === 0) {
-      console.log('StepStartComponent.onSubmit - navigate to applyCheck');
-      this.router.navigate(['../applyCheck'], {relativeTo: this.route});
-    }*/
+  /**
+   * Submit action should trigger creation of a process based on user input
+   */
+  onApplyCheck() {
+    this.store.dispatch(new ProcessActions.PostProcess({csi: this.step.data.csi, zone: this.step.data.zone}));
   }
 
+  /**
+   * Cancel action should remove process from store and redirect to home page
+   */
   onCancel() {
     console.log('StepStartComponent.onCancel');
-    this.store.dispatch(new ProcessActions.DeleteProcess());
+    this.store.dispatch(new ProcessActions.DeleteProcessFromStore());
     this.router.navigate(['/home']);
   }
 

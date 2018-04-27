@@ -9,8 +9,7 @@ describe('StepErrorComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ StepErrorComponent ]
-    })
-    .compileComponents();
+    });
   }));
 
   beforeEach(() => {

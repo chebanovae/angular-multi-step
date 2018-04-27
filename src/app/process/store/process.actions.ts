@@ -1,21 +1,25 @@
 import {Action} from '@ngrx/store';
 import {Process} from '../model/process.model';
 
-export const UPDATE_PROCESS = 'UPDATE_PROCESS';
-export const DELETE_PROCESS = 'DELETE_PROCESS';
-
+/**
+ * Actions for store manipulation
+ */
+export const UPDATE_PROCESS_IN_STORE = 'UPDATE_PROCESS_IN_STORE';
+export const DELETE_PROCESS_FROM_STORE = 'DELETE_PROCESS_FROM_STORE';
+/**
+ * Actions for backend manipulation
+ */
 export const POST_PROCESS = 'POST_PROCESS';
 export const PUT_PROCESS = 'PUT_PROCESS';
 export const GET_PROCESS = 'GET_PROCESS';
 
-
-export class UpdateProcess implements Action {
+export class UpdateProcessInStore implements Action {
   constructor(public payload: Process) {}
-  readonly type = UPDATE_PROCESS;
+  readonly type = UPDATE_PROCESS_IN_STORE;
 }
 
-export class DeleteProcess implements Action {
-  readonly type = DELETE_PROCESS;
+export class DeleteProcessFromStore implements Action {
+  readonly type = DELETE_PROCESS_FROM_STORE;
 }
 
 export class PostProcess implements Action {
@@ -33,4 +37,4 @@ export class GetProcess implements Action {
   constructor(public payload: string) {}
 }
 
-export type ProcessActions = UpdateProcess | DeleteProcess | PostProcess | PutProcess | GetProcess;
+export type ProcessActions = UpdateProcessInStore | DeleteProcessFromStore | PostProcess | PutProcess | GetProcess;

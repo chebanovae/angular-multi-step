@@ -1,14 +1,20 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
 import {Store} from '@ngrx/store';
+
 import {Subscription} from 'rxjs/Subscription';
+import 'rxjs/add/operator/take';
+import 'rxjs/add/operator/do';
 
 import * as fromApp from '../store/app.states';
-import {Process, ProcessStatus} from './model/process.model';
-import {ActivatedRoute, Router} from '@angular/router';
+import {Process} from './model/process.model';
 import * as ProcessActions from './store/process.actions';
-// import {ProcessService} from "./process.service";
-import {ProcessStep, StepType} from './model/process-step.model';
+import {ProcessFlow} from './model/process-flow.service';
 
+/**
+ * Main Process component
+ * Subscribes for a process to listen and display current process state
+ */
 @Component({
   selector: 'app-process',
   templateUrl: './process.component.html'
@@ -20,32 +26,34 @@ export class ProcessComponent implements OnInit, OnDestroy {
   constructor(private store: Store<fromApp.AppState>,
               private route: ActivatedRoute,
               private router: Router,
-              ) { }
-
-  ngOnInit() {
-    this.subscription = this.store.select('processState')
+              private processFlow: ProcessFlow) {
+    this.store.select('processState')
+      .take(1)
       .subscribe((data) => {
-        this.process = data.process;
-        this.goToCurrentStep();
+        if (data.process === undefined) {
+          console.log('ProcessComponent.constructor - create new process');
+          // Create new empty process
+          this.store.dispatch(new ProcessActions.PostProcess({csi: '', zone: ''}));
+        }
       });
   }
 
-  goToCurrentStep() {
-    if (this.process && this.process.steps) {
-      let currentStep: ProcessStep;
-      this.process.steps.forEach((value, key, map) => { currentStep = value; });
-      const route = StepType.toRoute(currentStep.type);
-      console.log(this.process.steps);
-      console.log('ProcessComponent.goToCurrentStep - process is not empty, get currentStep: ' + StepType.toRoute(currentStep.type));
-      this.router.navigate([route], {relativeTo: this.route});
-    } else if (this.process) {
-      console.log('ProcessComponent.goToCurrentStep - process is new, go to start');
-      this.router.navigate(['start'], {relativeTo: this.route});
-    }
+  ngOnInit() {
+    console.log('ProcessComponent.ngOnInit');
+    this.subscription = this.store.select('processState')
+      .subscribe((data) => {
+        console.log('ProcessComponent.ngOnInit - refresh process');
+        this.process = data.process;
+        if (this.process) {
+          const route = this.processFlow.getNextRoute(this.process);
+          console.log('ProcessComponent.ngOnInit - navigate to next step: ' + route);
+          this.router.navigate([route]);
+        }
+    });
   }
 
   ngOnDestroy() {
-    console.log('ProcessComponent.ngOnInit - ngOnDestroy');
+    console.log('ProcessComponent.ngOnDestroy');
     this.subscription.unsubscribe();
   }
 }
