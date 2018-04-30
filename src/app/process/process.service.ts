@@ -11,54 +11,84 @@ export class ProcessService {
   private data: Map<string, {csi: string, zone: string}> = new Map();
   private refreshCounter = -1;
 
-  static getHolddataStep1() {
-    return new ApplyCheckStepModel(
-      {holddata: ['holddata 1', 'holddata 2', 'holddata 3'], postholddata: []},
-      false, true, ProcessStatus.IN_PROGRESS,
-      {rc: 4, message: 'Apply check failed. Resolve holddata'});
+  static getHolddataStep1(): ApplyCheckStepModel {
+    return {
+      type: StepType.APPLY_CHECK,
+      data: {
+        holddata: ['holddata 1', 'holddata 2', 'holddata 3'], postholddata: []
+      },
+      allowNext: false,
+      allowBack: true,
+      status: ProcessStatus.IN_PROGRESS,
+      result: {rc: 4, message: 'Apply check failed. Resolve holddata'}
+    };
   }
 
-  static getHolddataStep2() {
-    return new ApplyCheckStepModel(
-      {holddata: ['holddata 1', 'holddata 2', 'holddata 3', 'holddata 4', 'holddata 5'], postholddata: []},
-      false, true,  ProcessStatus.IN_PROGRESS,
-      {rc: 4, message: 'Apply check failed. Resolve holddata'});
+  static getHolddataStep2(): ApplyCheckStepModel {
+    return {
+      type: StepType.APPLY_CHECK,
+      data: {
+        holddata: ['holddata 1', 'holddata 2', 'holddata 3', 'holddata 4', 'holddata 5'], postholddata: []
+      },
+      allowNext: false,
+      allowBack: true,
+      status: ProcessStatus.IN_PROGRESS,
+      result: {rc: 4, message: 'Apply check failed. Resolve holddata'}
+    };
   }
 
-  static getHolddataStepResolved() {
-    return new ApplyCheckStepModel(
-      {holddata: [], postholddata: ['holddata 1', 'holddata 2']},
-      true, true, ProcessStatus.IN_PROGRESS,
-      {rc: 0, message: 'Apply check done'});
+  static getHolddataStepResolved(): ApplyCheckStepModel {
+    return {
+      type: StepType.APPLY_CHECK,
+      data: {
+        holddata: [], postholddata: ['holddata 1', 'holddata 2']
+      },
+      allowNext: true,
+      allowBack: true,
+      status: ProcessStatus.IN_PROGRESS,
+      result: {rc: 0, message: 'Apply check done'}
+    };
   }
 
-  static getDoneStep() {
-    return new ApplyStepModel(
-      {holddata: [], postholddata: ['holddata 1', 'holddata 2']},
-      true, true, ProcessStatus.IN_PROGRESS,
-      {rc: 0, message: 'Apply done'});
+  static getDoneStep(): ApplyStepModel {
+    return {
+      type: StepType.APPLY,
+      data: {
+        holddata: [], postholddata: ['holddata 1', 'holddata 2']
+      },
+      allowNext: true,
+      allowBack: true,
+      status: ProcessStatus.DONE,
+      result: {rc: 0, message: 'Apply done'}
+    };
   }
 
   post(csi: string, zone: string) {
     const processId = (Math.random() * 1000000).toString().substring(1, 6);
     this.data.set(processId, {csi: csi, zone: zone});
-    const steps: Map<StepType, ProcessStep> = new Map();
+    const steps: ProcessStep[] = [];
+
     // Define steps model
     if (zone.startsWith('E')) {
-      steps.set(StepType.START, this.getStartStepError(processId));
+      steps.push(this.getStartStepError(processId));
     } else if (zone.startsWith('RC')) {
-      steps.set(StepType.START, this.getStartStepRC(processId));
+      steps.push(this.getStartStepRC(processId));
     } else  {
       if (csi === '') {
-        steps.set(StepType.START, this.getStartStepSuccess(processId));
+        steps.push(this.getStartStepSuccess(processId));
       } else {
-        steps.set(StepType.START, this.getStartStepSuccess(processId));
-        steps.set(StepType.APPLY_CHECK, ProcessService.getHolddataStep1());
+        steps.push(this.getStartStepSuccess(processId));
+        steps.push(ProcessService.getHolddataStep1());
       }
     }
+    const p: Process = {
+      id: processId,
+      description:  'Initialization done for ' + csi + ':' + zone,
+      steps: steps,
+      status: ProcessStatus.NOT_STARTED,
+      result:  {rc: 0, message: '0'}
+    };
 
-    const p = new Process(processId, 'Initialization done for ' + csi + ':' + zone,
-      steps, ProcessStatus.NOT_STARTED, {rc: 0, message: '0'});
     this.procs.set(processId, p);
 
     return p;
@@ -84,10 +114,10 @@ export class ProcessService {
   put(processId: string): Process {
     const p = this.procs.get(processId);
 
-    if (!p.steps.has(StepType.APPLY_CHECK)) {
-      p.steps.set(StepType.APPLY_CHECK, ProcessService.getHolddataStep1());
+    if (!p.steps.find((value, index, object) => value.type === StepType.APPLY_CHECK)) {
+      p.steps.push(ProcessService.getHolddataStep1());
     } else {
-      p.steps.set(StepType.APPLY, ProcessService.getDoneStep());
+      p.steps.push(ProcessService.getDoneStep());
     }
 
     return p;
@@ -96,90 +126,105 @@ export class ProcessService {
   putWithBody(processId: string): Process {
     const p = this.procs.get(processId);
 
-    if (p.steps.has(StepType.APPLY_CHECK)) {
-      p.steps.set(StepType.APPLY_CHECK, ProcessService.getHolddataStep2());
+    if (p.steps.find((value, index, object) => value.type === StepType.APPLY_CHECK)) {
+      p.steps.push(ProcessService.getHolddataStep2());
     }
 
     return p;
   }
 
   getApplyDone(csi: string, zone: string) {
-    const steps: Map<StepType, ProcessStep> = new Map();
+    const steps: ProcessStep[] = [];
     const processId = (Math.random() * 1000000).toString().substring(1, 6);
     this.data.set(processId, {csi: csi, zone: zone});
     console.log('csi:zone:id=' + csi + ':' + zone + ':' + processId);
 
     // Define steps model
     if (zone.startsWith('E')) {
-      steps.set(StepType.START, this.getStartStepError(processId));
+      steps.push(this.getStartStepError(processId));
     } else if (zone.startsWith('RC')) {
-      steps.set(StepType.START, this.getStartStepRC(processId));
+      steps.push(this.getStartStepRC(processId));
     } else  {
       if (csi === '') {
-        steps.set(StepType.START, this.getStartStepSuccess(processId));
+        steps.push(this.getStartStepSuccess(processId));
       } else {
-        steps.set(StepType.START, this.getStartStepSuccess(processId));
-        steps.set(StepType.APPLY_CHECK, ProcessService.getHolddataStepResolved());
+        steps.push(this.getStartStepSuccess(processId));
+        steps.push(ProcessService.getHolddataStepResolved());
       }
     }
-    steps.set(StepType.APPLY, ProcessService.getDoneStep());
+    steps.push(ProcessService.getDoneStep());
 
-    const p = new Process(processId, 'Initialization done for ' + csi + ':' + zone,
-      steps, ProcessStatus.IN_PROGRESS, {rc: 0, message: '0'});
+    const p: Process = {
+      id: processId,
+      description:  'Initialization done for ' + csi + ':' + zone,
+      steps: steps,
+      status: ProcessStatus.NOT_STARTED,
+      result:  {rc: 0, message: '0'}
+    };
     this.procs.set(processId, p);
 
     return p;
   }
 
   getApplyCheckDone(csi: string, zone: string) {
-    const steps: Map<StepType, ProcessStep> = new Map();
+    const steps: ProcessStep[] = [];
     const processId = (Math.random() * 1000000).toString().substring(1, 6);
     this.data.set(processId, {csi: csi, zone: zone});
     console.log('csi:zone:id=' + csi + ':' + zone + ':' + processId);
 
     // Define steps model
     if (zone.startsWith('E')) {
-      steps.set(StepType.START, this.getStartStepError(processId));
+      steps.push(this.getStartStepError(processId));
     } else if (zone.startsWith('RC')) {
-      steps.set(StepType.START, this.getStartStepRC(processId));
+      steps.push(this.getStartStepRC(processId));
     } else  {
       if (csi === '') {
-        steps.set(StepType.START, this.getStartStepSuccess(processId));
+        steps.push(this.getStartStepSuccess(processId));
       } else {
-        steps.set(StepType.START, this.getStartStepSuccess(processId));
-        steps.set(StepType.APPLY_CHECK, ProcessService.getHolddataStepResolved());
+        steps.push(this.getStartStepSuccess(processId));
+        steps.push(ProcessService.getHolddataStepResolved());
       }
     }
 
-    const p = new Process(processId, 'Initialization done for ' + csi + ':' + zone,
-      steps, ProcessStatus.IN_PROGRESS, {rc: 0, message: '0'});
+    const p: Process = {
+      id: processId,
+      description:  'Initialization done for ' + csi + ':' + zone,
+      steps: steps,
+      status: ProcessStatus.IN_PROGRESS,
+      result:  {rc: 0, message: '0'}
+    };
     this.procs.set(processId, p);
 
     return p;
   }
 
   getApplyCheckFailed(csi: string, zone: string) {
-    const steps: Map<StepType, ProcessStep> = new Map();
+    const steps: ProcessStep[] = [];
     const processId = (Math.random() * 1000000).toString().substring(1, 6);
     this.data.set(processId, {csi: csi, zone: zone});
     console.log('csi:zone:id=' + csi + ':' + zone + ':' + processId);
 
     // Define steps model
     if (zone.startsWith('E')) {
-      steps.set(StepType.START, this.getStartStepError(processId));
+      steps.push(this.getStartStepError(processId));
     } else if (zone.startsWith('RC')) {
-      steps.set(StepType.START, this.getStartStepRC(processId));
+      steps.push(this.getStartStepRC(processId));
     } else  {
       if (csi === '') {
-        steps.set(StepType.START, this.getStartStepSuccess(processId));
+        steps.push(this.getStartStepSuccess(processId));
       } else {
-        steps.set(StepType.START, this.getStartStepSuccess(processId));
-        steps.set(StepType.APPLY_CHECK, ProcessService.getHolddataStep1());
+        steps.push(this.getStartStepSuccess(processId));
+        steps.push(ProcessService.getHolddataStep1());
       }
     }
 
-    const p = new Process(processId, 'Initialization done for ' + csi + ':' + zone,
-      steps, ProcessStatus.IN_PROGRESS, {rc: 0, message: '0'});
+    const p: Process = {
+      id: processId,
+      description:  'Initialization done for ' + csi + ':' + zone,
+      steps: steps,
+      status: ProcessStatus.IN_PROGRESS,
+      result:  {rc: 0, message: '0'}
+    };
     this.procs.set(processId, p);
 
     return p;
@@ -202,72 +247,101 @@ export class ProcessService {
   }
 
   getProcessHolddata1(processId: string) {
-    const steps: Map<StepType, ProcessStep> = new Map();
-    steps.set(StepType.START, this.getStartStepSuccess(processId));
-    steps.set(StepType.APPLY_CHECK, ProcessService.getHolddataStep1());
+    const steps: ProcessStep[] = [
+      this.getStartStepSuccess(processId),
+      ProcessService.getHolddataStep1()
+    ];
     const d = this.data.get(processId);
-    return new Process(processId, 'Apply process for ' + d.csi + ':' + d.zone,
-      steps, ProcessStatus.IN_PROGRESS, {rc: 8, message: 'Resolve holddata'});
+
+    return {
+      id: processId,
+      description: 'Apply process for ' + d.csi + ':' + d.zone,
+      steps: steps,
+      status: ProcessStatus.IN_PROGRESS,
+      result:  {rc: 8, message: 'Resolve holddata'}
+    };
   }
 
   getProcessHolddata2(processId: string) {
-    const steps: Map<StepType, ProcessStep> = new Map();
-    steps.set(StepType.START, this.getStartStepSuccess(processId));
-    steps.set(StepType.APPLY_CHECK, ProcessService.getHolddataStep2());
+    const steps: ProcessStep[] = [
+      this.getStartStepSuccess(processId),
+      ProcessService.getHolddataStep2()
+    ];
     const d = this.data.get(processId);
-    return new Process(processId, 'Apply process for ' + d.csi + ':' + d.zone,
-      steps, ProcessStatus.IN_PROGRESS, {rc: 8, message: 'Resolve holddata'});
+    return {
+      id: processId,
+      description: 'Apply process for ' + d.csi + ':' + d.zone,
+      steps: steps,
+      status: ProcessStatus.IN_PROGRESS,
+      result:  {rc: 8, message: 'Resolve holddata'}
+    };
   }
 
   getProcessResolved(processId: string) {
-    const steps: Map<StepType, ProcessStep> = new Map();
-    steps.set(StepType.START, this.getStartStepSuccess(processId));
-    steps.set(StepType.APPLY_CHECK, ProcessService.getHolddataStepResolved());
+    const steps: ProcessStep[] = [
+      this.getStartStepSuccess(processId),
+      ProcessService.getHolddataStepResolved()
+    ];
     const d = this.data.get(processId);
-    return new Process(processId, 'Apply process for ' + d.csi + ':' + d.zone,
-      steps, ProcessStatus.IN_PROGRESS, {rc: 0, message: 'Apply check done'});
+    return {
+      id: processId,
+      description: 'Apply process for ' + d.csi + ':' + d.zone,
+      steps: steps,
+      status: ProcessStatus.IN_PROGRESS,
+      result:  {rc: 0, message: 'Apply check done'}
+    };
   }
 
   getProcessDone(processId: string) {
-    const steps: Map<StepType, ProcessStep> = new Map();
-    steps.set(StepType.START, this.getStartStepSuccess(processId));
-    steps.set(StepType.APPLY_CHECK, ProcessService.getHolddataStepResolved());
-    steps.set(StepType.APPLY, ProcessService.getDoneStep());
+    const steps: ProcessStep[] = [
+      this.getStartStepSuccess(processId),
+      ProcessService.getHolddataStepResolved(),
+      ProcessService.getDoneStep()
+    ];
     const d = this.data.get(processId);
-    return new Process(processId, 'Apply process for ' + d.csi + ':' + d.zone,
-      steps, ProcessStatus.DONE, {rc: 0, message: 'Apply done'});
+    return {
+      id: processId,
+      description: 'Apply process for ' + d.csi + ':' + d.zone,
+      steps: steps,
+      status: ProcessStatus.DONE,
+      result: {rc: 0, message: 'Apply done'}
+    };
   }
 
   getStartStepSuccess(processId: string) {
     const d = this.data.get(processId);
-    return new StartStepModel(
-      {csi: d.csi, zone: d.zone},
-      true, true, ProcessStatus.IN_PROGRESS,
-      {rc: 0, message: 'Initialization Done. Procees to Apply check'});
+    return {
+      type: StepType.START,
+      data:  {csi: d.csi, zone: d.zone},
+      allowNext: true,
+      allowBack: true,
+      status: ProcessStatus.IN_PROGRESS,
+      result: {rc: 0, message: 'Initialization Done. Procees to Apply check'}
+    };
   }
 
   getStartStepRC(processId: string) {
     const d = this.data.get(processId);
-    return new StartStepModel(
-      {csi: d.csi, zone: d.zone},
-      true, true, ProcessStatus.IN_PROGRESS,
-      {rc: 12, message: 'Initialization failed - CSI not found.'});
+    return {
+      type: StepType.START,
+      data:  {csi: d.csi, zone: d.zone},
+      allowNext: true,
+      allowBack: true,
+      status: ProcessStatus.IN_PROGRESS,
+      result: {rc: 12, message: 'Initialization failed - CSI not found.'}
+    };
   }
 
   getStartStepError(processId: string) {
     const d = this.data.get(processId);
-    return new StartStepModel(
-      {csi: d.csi, zone: d.zone},
-      true, true, ProcessStatus.IN_PROGRESS,
-      {rc: 12, message: 'Initialization failed - SMPE error'},
-      'Something went wrong, cannot continue. Close the wizard and try again');
+    return {
+      type: StepType.START,
+      data:  {csi: d.csi, zone: d.zone},
+      allowNext: true,
+      allowBack: true,
+      status: ProcessStatus.IN_PROGRESS,
+      result: {rc: 12, message: 'Initialization failed - CSI not found.'},
+      error: 'Something went wrong, cannot continue. Close the wizard and try again'
+    };
   }
-
-
-
-
-
-
-
-
 }

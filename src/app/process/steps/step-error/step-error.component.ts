@@ -32,11 +32,9 @@ export class StepErrorComponent implements OnInit, OnDestroy {
       .take(1)
       .map((data) => data ? data.process : undefined)
       .map((data: Process) => data ? data.steps : undefined)
-      .subscribe((steps: Map<StepType, ProcessStep>) => {
+      .subscribe((steps: ProcessStep[]) => {
         console.log('StepErrorComponent.ngOnInit - refresh step');
-        steps.forEach((value) => {
-          this.step = value;
-        });
+        this.step = steps[steps.length - 1];
       });
   }
 

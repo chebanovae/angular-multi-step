@@ -6,7 +6,7 @@ export enum ProcessStatus {
   DONE = 3
 }
 
-export class ProcessResult {
+export interface ProcessResult {
   rc: number;
   message: string;
 }
@@ -22,11 +22,11 @@ export class ProcessResult {
  * result - result of the process
  * error - keeps error messages from backend
  */
-export class Process {
-  constructor(public id: string,
-              public description: string,
-              public steps:  Map<StepType, ProcessStep>,
-              public status: ProcessStatus,
-              public result: ProcessResult,
-              public error?: string) { }
+export interface Process {
+  id: string;
+  description: string;
+  steps:  ProcessStep[];
+  status: ProcessStatus;
+  result: ProcessResult;
+  error?: string;
 }

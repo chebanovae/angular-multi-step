@@ -19,7 +19,7 @@ import * as fromApp from '../../../store/app.states';
   templateUrl: './step-apply-check.component.html'
 })
 export class StepApplyCheckComponent implements OnInit, OnDestroy  {
-  processId: string;
+  process: Process;
   step: ApplyCheckStepModel;
   subscription: Subscription;
 
@@ -30,15 +30,11 @@ export class StepApplyCheckComponent implements OnInit, OnDestroy  {
 
   ngOnInit() {
     this.subscription = this.store.select('processState')
-      .map((data) => data ? data.process : undefined)
-      .map((data: Process) => {
-        this.processId = data.id;
-        return data ? data.steps : undefined;
-      })
-      .subscribe((steps: Map<StepType, ProcessStep>) => {
-        this.step = steps ? steps.get(StepType.APPLY_CHECK) : undefined;
-        console.log('StepApplyCheckComponent.ngOnInit - refresh step');
-        console.log(this.step);
+      .subscribe((data) => {
+        console.log('StepApplyCheckComponent.ngOnInit - getting fresh step');
+        console.log(data);
+        this.process = data.process ? data.process : undefined;
+        this.step = this.process ? this.process.steps.find((value: ProcessStep) => value.type === StepType.APPLY_CHECK) : undefined;
       });
   }
 
@@ -51,20 +47,20 @@ export class StepApplyCheckComponent implements OnInit, OnDestroy  {
    * Apply check action should fetch current status of a process from server
    */
   onApplyCheck() {
-    this.store.dispatch(new ProcessActions.GetProcess(this.processId));
+    this.store.dispatch(new ProcessActions.GetProcess(this.process.id));
   }
 
   /**
    * Apply action should trigger Apply action for a process
    */
   onApply() {
-    this.store.dispatch(new ProcessActions.PutProcess(this.processId));
+    this.store.dispatch(new ProcessActions.PutProcess(this.process.id));
   }
 
   /**
    * Go to previous step
    */
   onBack() {
-    this.router.navigate([StepType.toRoute(StepType.START)], {relativeTo: this.route});
+    this.router.navigate(['../', StepType.toRoute(StepType.START)], {relativeTo: this.route});
   }
 }

@@ -61,34 +61,22 @@ export interface ProcessStep {
  * Implementation of Start Step.
  * Data for the step: csi and zone corresponds to user's input
  */
-export class StartStepModel implements ProcessStep {
-  public readonly type: StepType = StepType.START;
-
-  constructor(public data: { csi: string, zone: string},
-              public  allowNext: boolean, public allowBack: boolean, public status: ProcessStatus,
-              public result: ProcessResult, public error?: string) { }
+export interface StartStepModel extends ProcessStep {
+  data: { csi: string, zone: string};
 }
 
 /**
  * Implementation of Apply Check Step.
  * Data for the step: holddata and postholdata information
  */
-export class ApplyCheckStepModel implements ProcessStep {
-  public readonly type: StepType = StepType.APPLY_CHECK;
-
-  constructor(public data: { holddata: string[], postholddata: string[]},
-              public  allowNext: boolean, public allowBack: boolean, public status: ProcessStatus,
-              public result: ProcessResult, public error?: string) { }
+export interface ApplyCheckStepModel extends ProcessStep {
+  data: { holddata: string[], postholddata: string[]};
 }
 
 /**
  * Implementation of Apply Step.
  * Data for the step: holddata and postholdata information
  */
-export class ApplyStepModel implements ProcessStep {
-  public readonly type: StepType = StepType.APPLY;
-
-  constructor(public data: { holddata: string[], postholddata: string[]},
-              public  allowNext: boolean, public allowBack: boolean, public status: ProcessStatus,
-              public result: ProcessResult, public error?: string) { }
+export interface ApplyStepModel extends ProcessStep {
+  data: { holddata: string[], postholddata: string[]};
 }

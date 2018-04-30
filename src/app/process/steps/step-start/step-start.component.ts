@@ -7,10 +7,11 @@ import 'rxjs/add/operator/take';
 
 import * as ProcessActions from '../../store/process.actions';
 import {Subscription} from 'rxjs/Subscription';
-import {ProcessStep, StepType} from '../../model/process-step.model';
+import {ProcessStep, StartStepModel, StepType} from '../../model/process-step.model';
 import {Process} from '../../model/process.model';
 import * as fromApp from '../../../store/app.states';
-
+import {Observable} from 'rxjs/Observable';
+import * as fromProcess from '../../../process/store/process.reducers';
 /**
  * UI representation of Start step
  * This component subscribes to display START step from process
@@ -20,20 +21,21 @@ import * as fromApp from '../../../store/app.states';
   templateUrl: './step-start.component.html'
 })
 export class StepStartComponent implements OnInit, OnDestroy {
-  step: ProcessStep;
+  process: Process;
+  step: StartStepModel;
   subscription: Subscription;
 
   constructor(protected router: Router,
-              protected store: Store<fromApp.AppState>) {
+              protected store: Store<fromApp.AppState>/*protected store: Store<fromProcess.State>*/) {
   }
 
   ngOnInit() {
     this.subscription = this.store.select('processState')
-      .map((data) => data.process)
-      .map((data: Process) => data ? data.steps : undefined)
-      .subscribe((steps: Map<StepType, ProcessStep>) => {
-          console.log('StepStartComponent.ngOnInit - getting fresh step');
-          this.step = steps ? steps.get(StepType.START) : undefined;
+      .subscribe((data) => {
+        console.log('StepStartComponent.ngOnInit - getting fresh step');
+        console.log(data);
+        this.process = data.process ? data.process : undefined;
+        this.step = this.process ? this.process.steps.find((value: ProcessStep) => value.type === StepType.START) : undefined;
       });
   }
 

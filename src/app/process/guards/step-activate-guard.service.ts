@@ -16,7 +16,7 @@ export class StepActivateGuard implements CanActivate {
       .take(1)
       .map((data) => {
         console.log('StepActivateGuard');
-        return data.process && data.process.steps && data.process.steps.size > 0;
+        return data.process && data.process.steps && data.process.steps.length > 0;
       });
   }
 }

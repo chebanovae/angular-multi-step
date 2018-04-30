@@ -8,6 +8,7 @@ import {ApplyStepModel, ProcessStep, StepType} from '../../model/process-step.mo
 import * as ProcessActions from '../../store/process.actions';
 import {Process} from '../../model/process.model';
 import * as fromApp from '../../../store/app.states';
+import {Observable} from 'rxjs/Observable';
 
 /**
  * UI representation of Apply step
@@ -18,6 +19,7 @@ import * as fromApp from '../../../store/app.states';
   templateUrl: './step-apply.component.html'
 })
 export class StepApplyComponent implements OnInit, OnDestroy {
+  process: Process;
   step: ApplyStepModel;
   subscription: Subscription;
 
@@ -27,11 +29,11 @@ export class StepApplyComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.subscription = this.store.select('processState')
-      .map((data) => data ? data.process : undefined)
-      .map((data: Process) => data ? data.steps : undefined)
-      .subscribe((steps: Map<StepType, ProcessStep>) => {
-        console.log('StepApplyComponent.ngOnInit - refresh step');
-        this.step = steps ? steps.get(StepType.APPLY_CHECK) : undefined;
+      .subscribe((data) => {
+        console.log('StepApplyComponent.ngOnInit - getting fresh step');
+        console.log(data);
+        this.process = data.process ? data.process : undefined;
+        this.step = this.process ? this.process.steps.find((value: ProcessStep) => value.type === StepType.APPLY) : undefined;
       });
   }
 

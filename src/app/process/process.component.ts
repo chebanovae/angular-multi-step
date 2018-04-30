@@ -10,7 +10,7 @@ import * as fromApp from '../store/app.states';
 import {Process} from './model/process.model';
 import * as ProcessActions from './store/process.actions';
 import {ProcessFlow} from './model/process-flow.service';
-
+import * as fromProcess from './store/process.reducers';
 /**
  * Main Process component
  * Subscribes for a process to listen and display current process state
@@ -42,9 +42,12 @@ export class ProcessComponent implements OnInit, OnDestroy {
     console.log('ProcessComponent.ngOnInit');
     this.subscription = this.store.select('processState')
       .subscribe((data) => {
-        console.log('ProcessComponent.ngOnInit - refresh process');
         this.process = data.process;
-        if (this.process) {
+        console.log('ProcessComponent.ngOnInit - refresh process');
+        console.log(this.process);
+        if (this.process !== undefined) {
+          console.log('ProcessComponent.ngOnInit - display process');
+          console.log(this.process);
           const route = this.processFlow.getNextRoute(this.process);
           console.log('ProcessComponent.ngOnInit - navigate to next step: ' + route);
           this.router.navigate([route]);
