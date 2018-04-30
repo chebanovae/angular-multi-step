@@ -11,21 +11,11 @@ import {ProcessStep, StepType} from './process-step.model';
  */
 export class ProcessFlow {
 
-  public getNextRoute(steps: ProcessStep[], step?: ProcessStep) {
-    let route;
+  public getNextRoute(steps: ProcessStep[]) {
+    const step = steps ? steps[steps.length - 1] : undefined;
 
-    // If step was not provided - take the last one from process
-    if (step === undefined) {
-      step = steps ? steps[steps.length - 1] : undefined;
-    }
-
-    if (step.error) {
-      console.log('ProcessFlow.ProcessFlow - navigate to error');
-      route = 'error';
-    } else {
-      route = StepType.toRoute(step.type);
-      console.log('ProcessFlow.ProcessFlow - navigate to ' + route);
-    }
-    return '/process/' + route;
+    const route = StepType.toRoute(step === undefined ? undefined : (step.error ? StepType.ERROR : step.type));
+    console.log('ProcessFlow.ProcessFlow - navigate to ' + route);
+    return route;
   }
 }

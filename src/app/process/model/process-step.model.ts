@@ -7,6 +7,7 @@ import {ProcessResult, ProcessStatus} from './process.model';
  * Error page is common for a process and display error information
  */
 export enum StepType {
+  ROOT,
   START,
   APPLY_CHECK,
   APPLY,
@@ -17,8 +18,8 @@ export enum StepType {
  * Get route name by step type
  */
 export namespace StepType {
-  export function toRoute(step: StepType): string {
-    switch (step) {
+  export function toRoute(stepType: StepType): string {
+    switch (stepType) {
       case StepType.START:
         return 'start';
       case StepType.APPLY_CHECK:

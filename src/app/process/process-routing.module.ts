@@ -10,7 +10,7 @@ import {StepErrorComponent} from './steps/step-error/step-error.component';
 import {StepType} from './model/process-step.model';
 
 const processRoutes: Routes = [
-  { path: '', component: ProcessComponent, children: [
+  { path: StepType.toRoute(StepType.ROOT), component: ProcessComponent, children: [
       { path: StepType.toRoute(StepType.START), component: StepStartComponent },
       { path: StepType.toRoute(StepType.APPLY_CHECK), component: StepApplyCheckComponent },
       { path: StepType.toRoute(StepType.APPLY), component: StepApplyComponent },

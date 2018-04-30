@@ -2,14 +2,14 @@
 <p *ngIf="step && step.result"> Step Result : {{ step.result.rc }} - {{ step.result.message }} </p>
 <div class="row">
   <div class="col-xs-4">
-    <form (ngSubmit)="onApplyCheck()" #processForm="ngForm">
+    <form (ngSubmit)="onApplyCheck(f)" #f="ngForm">
       <div class="form-group">
         <label for="csi">CSI:</label>
         <input
           type="text"
           id="csi"
           class="form-control"
-          [(ngModel)]="step?.data.csi"
+          [(ngModel)]="step.data.csi"
           name="csi"
           required>
       </div>
@@ -19,7 +19,7 @@
           type="text"
           id="zone"
           class="form-control"
-          [(ngModel)]="step?.data.zone"
+          [(ngModel)]="step.data.zone"
           name="zone"
           required>
       </div>
@@ -34,7 +34,7 @@
           </button>
           <button
             class="btn btn-success" type="submit"
-            [disabled]="!processForm.valid || !step?.allowNext">
+            [disabled]="!f.valid || !step?.allowNext">
             Apply Check
           </button>
         </div>

@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 
@@ -10,6 +10,7 @@ import {Subscription} from 'rxjs/Subscription';
 import {ProcessStep, StartStepModel, StepType} from '../../model/process-step.model';
 import * as fromApp from '../../../store/app.states';
 import * as fromProcess from '../../../process/store/process.reducers';
+import {NgForm} from '@angular/forms';
 /**
  * UI representation of Start step
  * This component subscribes to display START step from process
@@ -19,11 +20,12 @@ import * as fromProcess from '../../../process/store/process.reducers';
   templateUrl: './step-start.component.html'
 })
 export class StepStartComponent implements OnInit, OnDestroy {
+  @ViewChild('f') processForm: NgForm;
   step: StartStepModel;
   subscription: Subscription;
 
   constructor(protected router: Router,
-              protected store: Store<fromApp.AppState>/*protected store: Store<fromProcess.State>*/) {
+              protected store: Store<fromApp.AppState>) {
   }
 
   ngOnInit() {
@@ -43,8 +45,8 @@ export class StepStartComponent implements OnInit, OnDestroy {
   /**
    * Submit action should trigger creation of a process based on user input
    */
-  onApplyCheck() {
-    this.store.dispatch(new ProcessActions.PostProcess({csi: this.step.data.csi, zone: this.step.data.zone}));
+  onApplyCheck(form: NgForm) {
+    this.store.dispatch(new ProcessActions.PostProcess({csi: form.value.csi, zone: form.value.zone}));
   }
 
   /**

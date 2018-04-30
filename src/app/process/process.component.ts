@@ -51,7 +51,7 @@ export class ProcessComponent implements OnInit, OnDestroy {
           console.log('ProcessComponent.ngOnInit - display process');
           const route = this.processFlow.getNextRoute(this.process.steps);
           console.log('ProcessComponent.ngOnInit - navigate to next step: ' + route);
-          this.router.navigate([route]);
+          this.router.navigate(['process', route]);
         }
       });
   }
