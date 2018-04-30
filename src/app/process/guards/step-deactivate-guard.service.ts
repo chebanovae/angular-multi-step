@@ -8,7 +8,7 @@ import 'rxjs/add/operator/map';
 import {ProcessComponent} from '../process.component';
 import * as fromApp from '../../store/app.states';
 import * as ProcessActions from '../store/process.actions';
-
+import * as fromProcess from '../store/process.reducers';
 /**
  * CanDeactivate guard for process step components.
  *
@@ -22,7 +22,7 @@ export class StepDeactivateGuard implements CanDeactivate<ProcessComponent> {
   canDeactivate(component: ProcessComponent): Observable<boolean> | Promise<boolean> | boolean {
     return this.store.select('processState')
       .take(1)
-      .map((data) => {
+      .map((data: fromProcess.State) => {
         if ((data.process != null) && !confirm('Delete process?')) {
           return false;
         } else {

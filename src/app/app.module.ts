@@ -19,7 +19,6 @@ import {ProcessService} from './process/process.service';
     BrowserModule,
     AppRoutingModule,
     StoreModule.forRoot(reducers),
-
     !environment.production ? StoreDevtoolsModule.instrument() : []
   ],
   bootstrap: [AppComponent],

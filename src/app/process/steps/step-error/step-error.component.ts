@@ -6,11 +6,10 @@ import {Subscription} from 'rxjs/Subscription';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/take';
 
-import {ProcessStep, StepType} from '../../model/process-step.model';
+import {ProcessStep} from '../../model/process-step.model';
 import * as ProcessActions from '../../store/process.actions';
-import {Process} from '../../model/process.model';
 import * as fromApp from '../../../store/app.states';
-
+import * as fromProcess from '../../../process/store/process.reducers';
 /**
  * UI representation of Error step
  * This component subscribes to display error information for curernt step
@@ -30,11 +29,9 @@ export class StepErrorComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.subscription = this.store.select('processState')
       .take(1)
-      .map((data) => data ? data.process : undefined)
-      .map((data: Process) => data ? data.steps : undefined)
-      .subscribe((steps: ProcessStep[]) => {
+      .subscribe((data: fromProcess.State) => {
         console.log('StepErrorComponent.ngOnInit - refresh step');
-        this.step = steps[steps.length - 1];
+        this.step = (data.process && data.process.steps) ?  data.process.steps[data.process.steps.length - 1] : undefined;
       });
   }
 

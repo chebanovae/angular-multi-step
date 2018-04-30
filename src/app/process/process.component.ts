@@ -11,6 +11,8 @@ import {Process} from './model/process.model';
 import * as ProcessActions from './store/process.actions';
 import {ProcessFlow} from './model/process-flow.service';
 import * as fromProcess from './store/process.reducers';
+import {Observable} from 'rxjs/Observable';
+import {ProcessStep} from './model/process-step.model';
 /**
  * Main Process component
  * Subscribes for a process to listen and display current process state
@@ -20,7 +22,9 @@ import * as fromProcess from './store/process.reducers';
   templateUrl: './process.component.html'
 })
 export class ProcessComponent implements OnInit, OnDestroy {
+
   process: Process;
+  steps: ProcessStep[];
   subscription: Subscription;
 
   constructor(private store: Store<fromApp.AppState>,
@@ -29,7 +33,7 @@ export class ProcessComponent implements OnInit, OnDestroy {
               private processFlow: ProcessFlow) {
     this.store.select('processState')
       .take(1)
-      .subscribe((data) => {
+      .subscribe((data: fromProcess.State) => {
         if (data.process === undefined) {
           console.log('ProcessComponent.constructor - create new process');
           // Create new empty process
@@ -39,20 +43,17 @@ export class ProcessComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    console.log('ProcessComponent.ngOnInit');
     this.subscription = this.store.select('processState')
-      .subscribe((data) => {
+      .subscribe((data: fromProcess.State) => {
+        console.log('ProcessComponent.ngOnInit - get fresh process');
         this.process = data.process;
-        console.log('ProcessComponent.ngOnInit - refresh process');
-        console.log(this.process);
-        if (this.process !== undefined) {
+        if (this.process && this.process.steps) {
           console.log('ProcessComponent.ngOnInit - display process');
-          console.log(this.process);
-          const route = this.processFlow.getNextRoute(this.process);
+          const route = this.processFlow.getNextRoute(this.process.steps);
           console.log('ProcessComponent.ngOnInit - navigate to next step: ' + route);
           this.router.navigate([route]);
         }
-    });
+      });
   }
 
   ngOnDestroy() {

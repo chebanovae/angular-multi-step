@@ -8,9 +8,7 @@ import 'rxjs/add/operator/take';
 import * as ProcessActions from '../../store/process.actions';
 import {Subscription} from 'rxjs/Subscription';
 import {ProcessStep, StartStepModel, StepType} from '../../model/process-step.model';
-import {Process} from '../../model/process.model';
 import * as fromApp from '../../../store/app.states';
-import {Observable} from 'rxjs/Observable';
 import * as fromProcess from '../../../process/store/process.reducers';
 /**
  * UI representation of Start step
@@ -21,7 +19,6 @@ import * as fromProcess from '../../../process/store/process.reducers';
   templateUrl: './step-start.component.html'
 })
 export class StepStartComponent implements OnInit, OnDestroy {
-  process: Process;
   step: StartStepModel;
   subscription: Subscription;
 
@@ -31,11 +28,10 @@ export class StepStartComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.subscription = this.store.select('processState')
-      .subscribe((data) => {
+      .subscribe((data: fromProcess.State) => {
         console.log('StepStartComponent.ngOnInit - getting fresh step');
-        console.log(data);
-        this.process = data.process ? data.process : undefined;
-        this.step = this.process ? this.process.steps.find((value: ProcessStep) => value.type === StepType.START) : undefined;
+        this.step = (data.process && data.process.steps) ?
+          data.process.steps.find((value: ProcessStep) => value.type === StepType.START) : undefined;
       });
   }
 

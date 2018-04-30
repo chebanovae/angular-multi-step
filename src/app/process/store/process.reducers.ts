@@ -1,5 +1,5 @@
 import * as processActions from './process.actions';
-import {Process, ProcessStatus} from '../model/process.model';
+import {Process} from '../model/process.model';
 
 export interface State {
   process: Process;

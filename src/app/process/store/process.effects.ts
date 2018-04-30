@@ -1,4 +1,3 @@
-import {Store} from '@ngrx/store';
 import {Actions, Effect} from '@ngrx/effects';
 
 import 'rxjs/add/operator/switchMap';
@@ -9,7 +8,6 @@ import * as ProcessActions from './process.actions';
 import {Process} from '../model/process.model';
 import {ProcessService} from '../process.service';
 import {Injectable} from '@angular/core';
-import * as fromApp from '../../store/app.states';
 
 /**
  * Backend manipulation actions
@@ -68,8 +66,5 @@ export class ProcessEffects {
       };
     });
 
-    constructor(private actions$: Actions, private store: Store<fromApp.AppState>, private processService: ProcessService) {}
+    constructor(private actions$: Actions, private processService: ProcessService) {}
 }
-
-
-

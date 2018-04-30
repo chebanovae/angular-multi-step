@@ -7,9 +7,8 @@ import 'rxjs/add/operator/map';
 
 import {ApplyCheckStepModel, ProcessStep, StepType} from '../../model/process-step.model';
 import * as ProcessActions from '../../store/process.actions';
-import {Process} from '../../model/process.model';
 import * as fromApp from '../../../store/app.states';
-
+import * as fromProcess from '../../../process/store/process.reducers';
 /**
  * UI representation of Apply Check step
  * This component subscribes to display Apply Check step from process
@@ -19,7 +18,7 @@ import * as fromApp from '../../../store/app.states';
   templateUrl: './step-apply-check.component.html'
 })
 export class StepApplyCheckComponent implements OnInit, OnDestroy  {
-  process: Process;
+  processId: string;
   step: ApplyCheckStepModel;
   subscription: Subscription;
 
@@ -30,11 +29,11 @@ export class StepApplyCheckComponent implements OnInit, OnDestroy  {
 
   ngOnInit() {
     this.subscription = this.store.select('processState')
-      .subscribe((data) => {
+      .subscribe((data: fromProcess.State) => {
         console.log('StepApplyCheckComponent.ngOnInit - getting fresh step');
-        console.log(data);
-        this.process = data.process ? data.process : undefined;
-        this.step = this.process ? this.process.steps.find((value: ProcessStep) => value.type === StepType.APPLY_CHECK) : undefined;
+        this.processId = data.process ? data.process.id : undefined;
+        this.step = (data.process && data.process.steps) ?
+          data.process.steps.find((value: ProcessStep) => value.type === StepType.APPLY_CHECK) : undefined;
       });
   }
 
@@ -47,14 +46,14 @@ export class StepApplyCheckComponent implements OnInit, OnDestroy  {
    * Apply check action should fetch current status of a process from server
    */
   onApplyCheck() {
-    this.store.dispatch(new ProcessActions.GetProcess(this.process.id));
+    this.store.dispatch(new ProcessActions.GetProcess(this.processId));
   }
 
   /**
    * Apply action should trigger Apply action for a process
    */
   onApply() {
-    this.store.dispatch(new ProcessActions.PutProcess(this.process.id));
+    this.store.dispatch(new ProcessActions.PutProcess(this.processId));
   }
 
   /**

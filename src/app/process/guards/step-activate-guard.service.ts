@@ -6,6 +6,7 @@ import 'rxjs/add/operator/take';
 import 'rxjs/add/operator/map';
 
 import * as fromApp from '../../store/app.states';
+import * as fromProcess from '../store/process.reducers';
 
 @Injectable()
 export class StepActivateGuard implements CanActivate {
@@ -14,7 +15,7 @@ export class StepActivateGuard implements CanActivate {
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
     return this.store.select('processState')
       .take(1)
-      .map((data) => {
+      .map((data: fromProcess.State) => {
         console.log('StepActivateGuard');
         return data.process && data.process.steps && data.process.steps.length > 0;
       });

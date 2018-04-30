@@ -11,12 +11,12 @@ import {ProcessStep, StepType} from './process-step.model';
  */
 export class ProcessFlow {
 
-  public getNextRoute(process: Process, step?: ProcessStep) {
+  public getNextRoute(steps: ProcessStep[], step?: ProcessStep) {
     let route;
 
     // If step was not provided - take the last one from process
     if (step === undefined) {
-      process.steps.forEach((value) => { step = value; });
+      step = steps ? steps[steps.length - 1] : undefined;
     }
 
     if (step.error) {

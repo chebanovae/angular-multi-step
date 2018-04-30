@@ -1,4 +1,4 @@
-import {ProcessStep, StepType} from './process-step.model';
+import {ProcessStep} from './process-step.model';
 
 export enum ProcessStatus {
   NOT_STARTED = 1,
