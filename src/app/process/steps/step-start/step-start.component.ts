@@ -29,6 +29,7 @@ export class StepStartComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    console.log('StepStartComponent.ngOnInit');
     this.subscription = this.store.select('processState')
       .subscribe((data: fromProcess.State) => {
         console.log('StepStartComponent.ngOnInit - getting fresh step');
@@ -39,7 +40,9 @@ export class StepStartComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     console.log('StepStartComponent.ngOnDestroy');
-    this.subscription.unsubscribe();
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 
   /**

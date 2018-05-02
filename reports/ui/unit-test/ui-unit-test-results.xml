@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<testsuite name="PhantomJS 2.1.1 (Linux 0.0.0)" package="" timestamp="2018-05-02T16:44:03" id="0" hostname="liza-HP-EliteBook-8530w" tests="14" errors="0" failures="0" time="0.075">
+  <properties>
+    <property name="browser.fullName" value="Mozilla/5.0 (Unknown; Linux x86_64) AppleWebKit/538.1 (KHTML, like Gecko) PhantomJS/2.1.1 Safari/538.1"/>
+  </properties>
+  <testcase name="ProcessFlow should route to PROCESS home if no steps provided (undefined)" time="0.018" classname="ProcessFlow"/>
+  <testcase name="ProcessFlow should route to PROCESS home if no steps provided (empty array)" time="0.017" classname="ProcessFlow"/>
+  <testcase name="ProcessFlow should route to START step" time="0.003" classname="ProcessFlow"/>
+  <testcase name="ProcessFlow should route to APPLY_CHECK step if array of step provided" time="0.011" classname="ProcessFlow"/>
+  <testcase name="ProcessFlow should route to APPLY step if array of step provided" time="0.001" classname="ProcessFlow"/>
+  <testcase name="ProcessFlow should route to ERROR step if last step has an error defined" time="0.003" classname="ProcessFlow"/>
+  <testcase name="DeleteProcessFromStore should create an action" time="0.005" classname="DeleteProcessFromStore"/>
+  <testcase name="UpdateProcessInStore should create an action" time="0.004" classname="UpdateProcessInStore"/>
+  <testcase name="PostProcess should create an action" time="0.002" classname="PostProcess"/>
+  <testcase name="PutProcess should create an action" time="0.002" classname="PutProcess"/>
+  <testcase name="GetProcess should create an action" time="0.004" classname="GetProcess"/>
+  <testcase name="ProcessReducer should return the default state" time="0.002" classname="ProcessReducer"/>
+  <testcase name="ProcessReducer should return the updated state" time="0.002" classname="ProcessReducer"/>
+  <testcase name="ProcessReducer should return empty store" time="0.001" classname="ProcessReducer"/>
+  <system-out>
+    <![CDATA[PhantomJS 2.1.1 (Linux 0.0.0) LOG: 'ProcessFlow.ProcessFlow - navigate to '
+,PhantomJS 2.1.1 (Linux 0.0.0) LOG: 'ProcessFlow.ProcessFlow - navigate to '
+,PhantomJS 2.1.1 (Linux 0.0.0) LOG: 'ProcessFlow.ProcessFlow - navigate to start'
+,PhantomJS 2.1.1 (Linux 0.0.0) LOG: 'ProcessFlow.ProcessFlow - navigate to applyCheck'
+,PhantomJS 2.1.1 (Linux 0.0.0) LOG: 'ProcessFlow.ProcessFlow - navigate to apply'
+,PhantomJS 2.1.1 (Linux 0.0.0) LOG: 'ProcessFlow.ProcessFlow - navigate to error'
+,PhantomJS 2.1.1 (Linux 0.0.0) LOG: 'UPDATE_PROCESS_IN_STORE'
+,PhantomJS 2.1.1 (Linux 0.0.0) LOG: Object{id: 'processId', description: 'Initialization done for csi:zone', steps: [], status: 1, result: Object{rc: 0, message: '0'}}
+,PhantomJS 2.1.1 (Linux 0.0.0) LOG: 'Action: DELETE_PROCESS_FROM_STORE'
+
+]]>
+  </system-out>
+  <system-err/>
+</testsuite>

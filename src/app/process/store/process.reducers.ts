@@ -7,7 +7,7 @@ export interface State {
 
 const emptyProcess = undefined;
 
-const initialState: State = {
+export const initialState: State = {
   process: emptyProcess
 };
 
@@ -33,4 +33,3 @@ export function processReducer(state = initialState , action: processActions.Pro
       return state;
   }
 }
-

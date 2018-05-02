@@ -43,7 +43,7 @@ module.exports = function (config) {
       urlFriendlyName: false, // simply replaces spaces with _ for files/dirs
       reportName: 'swUpdUI' // report summary filename; browser info by default
     },
-    coverageIstanbulReporter: {
+    coverageIstanbulReporter: {      
       reports: [ 'html', 'lcovonly' ],
       dir: 'reports/ui/coverage', // base output directory
       'report-config': {
@@ -51,9 +51,10 @@ module.exports = function (config) {
         },
         lcovonly: {
           file: 'coverage.lcov' // options from here are valid: https://github.com/istanbuljs/istanbul-reports/blob/master/lib/lcovonly/index.js#L7-L10
-        }
+        }        
       },
-      fixWebpackSourcePaths: true
+      fixWebpackSourcePaths: true,
+      skipFilesWithNoCoverage: false
     },
     port: 9876,
     colors: true,
