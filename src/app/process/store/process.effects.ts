@@ -18,53 +18,29 @@ export class ProcessEffects {
    * Post data (create new process on backend) and put response into the store
    */
   @Effect()
-  private _postProcess = this.actions$
+  _postProcess = this.actions$
     .ofType(ProcessActions.POST_PROCESS)
-    .map((action: ProcessActions.PostProcess) => {
-      return action.payload;
-    })
-    .map((payload: { csi: string, zone: string }) => {
-      console.log('put process: ' + payload.csi + ' ' + payload.zone);
-      return this.processService.post(payload.csi, payload.zone);
-    })
-    .map((process: Process) => {
-      return {
-        type: ProcessActions.UPDATE_PROCESS_IN_STORE,
-        payload: process
-      };
-    });
+    .map((action: ProcessActions.PostProcess) => action.payload)
+    .map((payload: { csi: string, zone: string }) => this.processService.post(payload.csi, payload.zone))
+    .map((process: Process) => new ProcessActions.UpdateProcessInStore(process));
 
   /**
-   * Put data (update existing on backend) and put response into the store
+   * Put data (update existing process on backend) and put response into the store
    */
   @Effect()
-  private _putProcess = this.actions$
+  _putProcess = this.actions$
     .ofType(ProcessActions.PUT_PROCESS)
-    .map((action: ProcessActions.PutProcess) => {
-      console.log('put process: ' + action.payload);
-      const process = this.processService.put(action.payload);
-      return {
-        type: ProcessActions.UPDATE_PROCESS_IN_STORE,
-        payload: process
-      };
-    });
+    .map((action: ProcessActions.PutProcess) => this.processService.put(action.payload))
+    .map((process: Process) => new ProcessActions.UpdateProcessInStore(process));
 
   /**
    * Get data (process from backend) and put response into the store
    */
   @Effect()
-  private _getProcess = this.actions$
+  _getProcess = this.actions$
     .ofType(ProcessActions.GET_PROCESS)
-    .map((action: ProcessActions.GetProcess) => {
-      console.log('get process: ' + action.payload);
-      return this.processService.get(action.payload);
-    })
-    .map((process) => {
-      return {
-        type: ProcessActions.UPDATE_PROCESS_IN_STORE,
-        payload: process
-      };
-    });
+    .map((action: ProcessActions.GetProcess) => this.processService.get(action.payload))
+    .map((process: Process) => new ProcessActions.UpdateProcessInStore(process));
 
     constructor(private actions$: Actions, private processService: ProcessService) {}
 }
