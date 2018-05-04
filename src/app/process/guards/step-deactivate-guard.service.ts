@@ -5,10 +5,11 @@ import {Store} from '@ngrx/store';
 import 'rxjs/add/operator/take';
 import 'rxjs/add/operator/map';
 
-import {ProcessComponent} from '../process.component';
 import * as fromApp from '../../store/app.states';
 import * as ProcessActions from '../store/process.actions';
 import * as fromProcess from '../store/process.reducers';
+import {ProcessComponent} from '../process.component';
+
 /**
  * CanDeactivate guard for process step components.
  *

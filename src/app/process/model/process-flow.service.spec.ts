@@ -1,108 +1,87 @@
 import {ProcessFlow} from './process-flow.service';
-import {ProcessStep, StepType} from './process-step.model';
-import {ProcessStatus} from './process.model';
+import {ProcessStatus, ProcessStep, StepType} from './process.model';
 
-function getStartStepSuccess(processId: string): ProcessStep {
-  return {
+const startStepSuccess = {
     type: StepType.START,
     data:  {csi: 'CSI1', zone: 'ZONE2' },
     allowNext: true,
     allowBack: true,
     status: ProcessStatus.IN_PROGRESS,
-    result: {rc: 0, message: 'Initialization Done. Procees to Apply check'}
-  };
-}
+    result: {rc: 0, message: 'Initialization Done. Proceed to Apply check'}
+};
 
-function getProcessHolddata2(processId: string): ProcessStep {
-  return {
+const processHolddata2 = {
     type: StepType.APPLY_CHECK,
     data:  { holddata: 'h1, h2, h3, h4', postholddata: 'h1, h2' },
     allowNext: true,
     allowBack: true,
     status: ProcessStatus.IN_PROGRESS,
-    result: {rc: 0, message: 'Initialization Done. Procees to Apply check'}
-  };
-}
+    result: {rc: 0, message: 'Initialization Done. Proceed to Apply check'}
+};
 
-function getProcessHolddataError(processId: string): ProcessStep {
-  return {
+const processHolddataError = {
     type: StepType.APPLY_CHECK,
     data:  { holddata: 'h1, h2, h3, h4', postholddata: 'h1, h2' },
     allowNext: true,
     allowBack: true,
     status: ProcessStatus.IN_PROGRESS,
-    result: {rc: 0, message: 'Initialization Done. Procees to Apply check'},
+    result: {rc: 0, message: 'Initialization Done. Proceed to Apply check'},
     error: 'Something went wrong'
-  };
-}
+};
 
-function getHolddataResolved(processId: string): ProcessStep {
-  return {
+const holddataResolved = {
     type: StepType.APPLY,
     data:  { holddata: '', postholddata: 'h1, h2' },
     allowNext: true,
     allowBack: true,
     status: ProcessStatus.IN_PROGRESS,
     result: {rc: 0, message: 'Apply Check done.'}
-  };
-}
+};
 
 describe('ProcessFlow', () => {
   it('should route to PROCESS home if no steps provided (undefined)', () => {
-    const processFlowService = new ProcessFlow();
-
-    const result = processFlowService.getNextRoute(undefined);
+    const result = ProcessFlow.getNextRoute(undefined);
     expect(result).toEqual(StepType.toRoute(undefined));
   });
 
   it('should route to PROCESS home if no steps provided (empty array)', () => {
-    const processFlowService = new ProcessFlow();
-
-    const result = processFlowService.getNextRoute([]);
+    const result = ProcessFlow.getNextRoute([]);
     expect(result).toEqual(StepType.toRoute(undefined));
   });
 
   it('should route to START step', () => {
-    const processFlowService = new ProcessFlow();
     const steps: ProcessStep[] = [
-      getStartStepSuccess('')
+      startStepSuccess
     ];
-
-    const result = processFlowService.getNextRoute(steps);
+    const result = ProcessFlow.getNextRoute(steps);
     expect(result).toEqual(StepType.toRoute(StepType.START));
   });
 
   it('should route to APPLY_CHECK step if array of step provided', () => {
-    const processFlowService = new ProcessFlow();
     const steps: ProcessStep[] = [
-      getStartStepSuccess(''),
-      getProcessHolddata2('')
+      startStepSuccess,
+      processHolddata2
     ];
-
-    const result = processFlowService.getNextRoute(steps);
+    const result = ProcessFlow.getNextRoute(steps);
     expect(result).toEqual(StepType.toRoute(StepType.APPLY_CHECK));
   });
 
   it('should route to APPLY step if array of step provided', () => {
-    const processFlowService = new ProcessFlow();
     const steps: ProcessStep[] = [
-      getStartStepSuccess(''),
-      getProcessHolddata2(''),
-      getHolddataResolved('')
+      startStepSuccess,
+      processHolddata2,
+      holddataResolved
     ];
-
-    const result = processFlowService.getNextRoute(steps);
+    const result = ProcessFlow.getNextRoute(steps);
     expect(result).toEqual(StepType.toRoute(StepType.APPLY));
   });
 
   it('should route to ERROR step if last step has an error defined', () => {
-    const processFlowService = new ProcessFlow();
     const steps: ProcessStep[] = [
-      getStartStepSuccess(''),
-      getProcessHolddataError('')
+      startStepSuccess,
+      processHolddataError
     ];
-
-    const result = processFlowService.getNextRoute(steps);
+    const result = ProcessFlow.getNextRoute(steps);
     expect(result).toEqual(StepType.toRoute(StepType.ERROR));
   });
 

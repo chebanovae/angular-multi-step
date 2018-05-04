@@ -1,6 +1,6 @@
 import * as fromProcess from './process.reducers';
 import * as processActions from './process.actions';
-import { Process, ProcessStatus } from '../model/process.model';
+import {Process, ProcessStatus} from '../model/process.model';
 
 describe('ProcessReducer', () => {
   it('should return the default state', () => {

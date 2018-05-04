@@ -1,13 +1,13 @@
 <h2>Resolve Holddata</h2>
-<p> Holddata : {{ step.data.holddata }} </p>
-<p> Post Holddata : {{ step.data.postholddata }} </p>
-<p> Step Result : {{ step.result.rc }} - {{ step.result.message }} </p>
+<p> Holddata : {{ step?.data.holddata }} </p>
+<p> Post Holddata : {{ step?.data.postholddata }} </p>
+<p> Step Result : {{ step?.result.rc }} - {{ step?.result.message }} </p>
 <div class="row">
   <div class="col-xs-6">
     <button
       class="btn btn-primary"
       type="button"
-      [disabled]="!step.allowBack"
+      [disabled]="!step?.allowBack"
       (click)="onBack()">
       Back
     </button>
@@ -15,13 +15,13 @@
       class="btn btn-info"
       type="button"
       (click)="onApplyCheck()"
-      [disabled]="step.allowNext">
+      [disabled]="step?.allowNext">
       Apply check
     </button>
     <button
       class="btn btn-success"
       type="button"
-      [disabled]="!step.allowNext"
+      [disabled]="!step?.allowNext"
       (click)="onApply()">
       Apply
     </button>

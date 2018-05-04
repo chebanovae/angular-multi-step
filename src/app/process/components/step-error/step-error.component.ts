@@ -6,13 +6,14 @@ import {Subscription} from 'rxjs/Subscription';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/take';
 
-import {ProcessStep} from '../../model/process-step.model';
-import * as ProcessActions from '../../store/process.actions';
 import * as fromApp from '../../../store/app.states';
 import * as fromProcess from '../../../process/store/process.reducers';
+import * as ProcessActions from '../../store/process.actions';
+import {ProcessStep} from '../../model/process.model';
+
 /**
  * UI representation of Error step
- * This component subscribes to display error information for curernt step
+ * This component subscribes to display error information for current step
  */
 @Component({
   selector: 'app-step-error',
@@ -22,8 +23,8 @@ export class StepErrorComponent implements OnInit, OnDestroy {
   step: ProcessStep;
   subscription: Subscription;
 
-  constructor(protected router: Router,
-              protected store: Store<fromApp.AppState>) {
+  constructor(private router: Router,
+              private store: Store<fromApp.AppState>) {
   }
 
   ngOnInit() {
@@ -31,13 +32,16 @@ export class StepErrorComponent implements OnInit, OnDestroy {
       .take(1)
       .subscribe((data: fromProcess.State) => {
         console.log('StepErrorComponent.ngOnInit - refresh step');
-        this.step = (data.process && data.process.steps) ?  data.process.steps[data.process.steps.length - 1] : undefined;
+        this.step = (data.process && data.process.steps && data.process.steps.length > 0)
+          ? data.process.steps[data.process.steps.length - 1] : undefined;
       });
   }
 
   ngOnDestroy() {
     console.log('StepErrorComponent.ngOnDestroy');
-    this.subscription.unsubscribe();
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 
   /**

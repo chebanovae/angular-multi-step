@@ -1,12 +1,11 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
+import {Store} from '@ngrx/store';
 import {ActivatedRoute, Router} from '@angular/router';
 
+import * as fromApp from './store/app.states';
 import * as ProcessActions from './process/store/process.actions';
 import {ProcessService} from './process/process.service';
-import * as fromApp from './store/app.states';
-import {Store} from '@ngrx/store';
 import {Process} from './process/model/process.model';
-
 
 @Component({
   selector: 'app-root',

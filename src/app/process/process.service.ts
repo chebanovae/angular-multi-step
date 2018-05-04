@@ -1,5 +1,4 @@
-import {Process, ProcessStatus} from './model/process.model';
-import {ApplyStepModel, ApplyCheckStepModel, ProcessStep, StartStepModel, StepType} from './model/process-step.model';
+import {Process, ProcessStatus, ApplyStepModel, ApplyCheckStepModel, ProcessStep, StepType} from './model/process.model';
 
 /**
  * This class mocks backend for process service.
@@ -114,7 +113,7 @@ export class ProcessService {
   put(processId: string): Process {
     const p = this.procs.get(processId);
 
-    if (!p.steps.find((value, index, object) => value.type === StepType.APPLY_CHECK)) {
+    if (!p.steps.find((value) => value.type === StepType.APPLY_CHECK)) {
       p.steps.push(ProcessService.getHolddataStep1());
     } else {
       p.steps.push(ProcessService.getDoneStep());
@@ -123,7 +122,7 @@ export class ProcessService {
     return p;
   }
 
-  putWithBody(processId: string): Process {
+  /*putWithBody(processId: string): Process {
     const p = this.procs.get(processId);
 
     if (p.steps.find((value, index, object) => value.type === StepType.APPLY_CHECK)) {
@@ -131,7 +130,7 @@ export class ProcessService {
     }
 
     return p;
-  }
+  }*/
 
   getApplyDone(csi: string, zone: string) {
     const steps: ProcessStep[] = [];
@@ -231,10 +230,10 @@ export class ProcessService {
   }
 
   /**
-   * Method mocks server logic and return sequence of data to mimick APPLY CHECK process
+   * Method mocks server logic and return sequence of data to mimic APPLY CHECK process
    * @returns {Process}
    */
-  getProcess(processId: string) {
+  /*getProcess(processId: string) {
     this.refreshCounter = this.refreshCounter > 2 ? this.refreshCounter = 0 : this.refreshCounter = this.refreshCounter + 1;
     switch (this.refreshCounter) {
       case 0:
@@ -244,7 +243,7 @@ export class ProcessService {
       default:
         return  this.getProcessResolved(processId);
     }
-  }
+  }*/
 
   getProcessHolddata1(processId: string) {
     const steps: ProcessStep[] = [
@@ -292,7 +291,7 @@ export class ProcessService {
     };
   }
 
-  getProcessDone(processId: string) {
+  /*getProcessDone(processId: string) {
     const steps: ProcessStep[] = [
       this.getStartStepSuccess(processId),
       ProcessService.getHolddataStepResolved(),
@@ -306,7 +305,7 @@ export class ProcessService {
       status: ProcessStatus.DONE,
       result: {rc: 0, message: 'Apply done'}
     };
-  }
+  }*/
 
   getStartStepSuccess(processId: string) {
     const d = this.data.get(processId);
@@ -316,7 +315,7 @@ export class ProcessService {
       allowNext: true,
       allowBack: true,
       status: ProcessStatus.IN_PROGRESS,
-      result: {rc: 0, message: 'Initialization Done. Procees to Apply check'}
+      result: {rc: 0, message: 'Initialization Done. Proceed to Apply check'}
     };
   }
 

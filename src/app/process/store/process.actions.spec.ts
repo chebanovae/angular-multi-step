@@ -1,11 +1,10 @@
-import {UpdateProcessInStore, DeleteProcessFromStore, PostProcess, PutProcess, GetProcess,
-    UPDATE_PROCESS_IN_STORE, DELETE_PROCESS_FROM_STORE, POST_PROCESS, PUT_PROCESS, GET_PROCESS } from './process.actions';
-import { Process, ProcessStatus } from '../model/process.model';
+import * as ProcessActions from './process.actions';
+import {Process, ProcessStatus} from '../model/process.model';
 
 describe('DeleteProcessFromStore', () => {
     it('should create an action', () => {
-        const action = new DeleteProcessFromStore();
-        expect({...action}).toEqual({type: DELETE_PROCESS_FROM_STORE});
+        const action = new ProcessActions.DeleteProcessFromStore();
+        expect({...action}).toEqual({type: ProcessActions.DELETE_PROCESS_FROM_STORE});
     });
 });
 
@@ -19,8 +18,8 @@ describe('UpdateProcessInStore', () => {
             result:  {rc: 0, message: '0'}
           };
 
-        const action = new UpdateProcessInStore(payload);
-        expect({...action}).toEqual({type: UPDATE_PROCESS_IN_STORE, payload });
+        const action = new ProcessActions.UpdateProcessInStore(payload);
+        expect({...action}).toEqual({type: ProcessActions.UPDATE_PROCESS_IN_STORE, payload });
     });
 });
 
@@ -30,26 +29,23 @@ describe('PostProcess', () => {
             csi: 'somescsi',
             zone: 'somezone'
           };
-
-        const action = new PostProcess(payload);
-        expect({...action}).toEqual({type: POST_PROCESS, payload });
+        const action = new ProcessActions.PostProcess(payload);
+        expect({...action}).toEqual({type: ProcessActions.POST_PROCESS, payload });
     });
 });
 
 describe('PutProcess', () => {
     it('should create an action', () => {
         const payload = 'processId';
-
-        const action = new PutProcess(payload);
-        expect({...action}).toEqual({type: PUT_PROCESS, payload });
+        const action = new ProcessActions.PutProcess(payload);
+        expect({...action}).toEqual({type: ProcessActions.PUT_PROCESS, payload });
     });
 });
 
 describe('GetProcess', () => {
     it('should create an action', () => {
         const payload = 'processId';
-
-        const action = new GetProcess(payload);
-        expect({...action}).toEqual({type: GET_PROCESS, payload });
+        const action = new ProcessActions.GetProcess(payload);
+        expect({...action}).toEqual({type: ProcessActions.GET_PROCESS, payload });
     });
 });

@@ -1,3 +1,4 @@
+import {Injectable} from '@angular/core';
 import {Actions, Effect} from '@ngrx/effects';
 
 import 'rxjs/add/operator/switchMap';
@@ -7,7 +8,6 @@ import 'rxjs/add/operator/withLatestFrom';
 import * as ProcessActions from './process.actions';
 import {Process} from '../model/process.model';
 import {ProcessService} from '../process.service';
-import {Injectable} from '@angular/core';
 
 /**
  * Backend manipulation actions

@@ -1,5 +1,4 @@
-import {Process} from './process.model';
-import {ProcessStep, StepType} from './process-step.model';
+import {ProcessStep, StepType} from './process.model';
 
 /**
  * This service calculate proper UI component for a process. This services is needed to be able to display current state
@@ -11,7 +10,7 @@ import {ProcessStep, StepType} from './process-step.model';
  */
 export class ProcessFlow {
 
-  public getNextRoute(steps: ProcessStep[]) {
+  public static getNextRoute(steps: ProcessStep[]) {
     const step = steps ? steps[steps.length - 1] : undefined;
 
     const route = StepType.toRoute(step === undefined ? undefined : (step.error ? StepType.ERROR : step.type));

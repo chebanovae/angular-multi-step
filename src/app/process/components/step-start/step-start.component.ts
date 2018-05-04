@@ -1,16 +1,16 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 
+import {Subscription} from 'rxjs/Subscription';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/take';
 
-import * as ProcessActions from '../../store/process.actions';
-import {Subscription} from 'rxjs/Subscription';
-import {ProcessStep, StartStepModel, StepType} from '../../model/process-step.model';
 import * as fromApp from '../../../store/app.states';
 import * as fromProcess from '../../../process/store/process.reducers';
-import {NgForm} from '@angular/forms';
+import * as ProcessActions from '../../store/process.actions';
+import {ProcessStep, StartStepModel, StepType} from '../../model/process.model';
+
 /**
  * UI representation of Start step
  * This component subscribes to display START step from process
@@ -20,7 +20,6 @@ import {NgForm} from '@angular/forms';
   templateUrl: './step-start.component.html'
 })
 export class StepStartComponent implements OnInit, OnDestroy {
-  @ViewChild('f') processForm: NgForm;
   step: StartStepModel;
   subscription: Subscription;
 
@@ -33,7 +32,7 @@ export class StepStartComponent implements OnInit, OnDestroy {
     this.subscription = this.store.select('processState')
       .subscribe((data: fromProcess.State) => {
         console.log('StepStartComponent.ngOnInit - getting fresh step');
-        this.step = (data.process && data.process.steps) ?
+        this.step = (data.process && data.process.steps  && data.process.steps.length > 0) ?
           data.process.steps.find((value: ProcessStep) => value.type === StepType.START) : undefined;
       });
   }
@@ -48,8 +47,8 @@ export class StepStartComponent implements OnInit, OnDestroy {
   /**
    * Submit action should trigger creation of a process based on user input
    */
-  onApplyCheck(form: NgForm) {
-    this.store.dispatch(new ProcessActions.PostProcess({csi: form.value.csi, zone: form.value.zone}));
+  onApplyCheck(csi: string, zone: string) {
+    this.store.dispatch(new ProcessActions.PostProcess({csi: csi, zone: zone}));
   }
 
   /**

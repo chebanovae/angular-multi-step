@@ -1,13 +1,13 @@
-import {RouterModule, Routes} from '@angular/router';
 import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
 
 import {ProcessComponent} from './process.component';
-import {StepStartComponent} from './steps/step-start/step-start.component';
-import {StepApplyComponent} from './steps/step-apply/step-apply.component';
-import {StepApplyCheckComponent} from './steps/step-apply-check/step-apply-check.component';
+import {StepStartComponent} from './components/step-start/step-start.component';
+import {StepApplyComponent} from './components/step-apply/step-apply.component';
+import {StepApplyCheckComponent} from './components/step-apply-check/step-apply-check.component';
 import {StepDeactivateGuard} from './guards/step-deactivate-guard.service';
-import {StepErrorComponent} from './steps/step-error/step-error.component';
-import {StepType} from './model/process-step.model';
+import {StepErrorComponent} from './components/step-error/step-error.component';
+import {StepType} from './model/process.model';
 
 const processRoutes: Routes = [
   { path: StepType.toRoute(StepType.ROOT), component: ProcessComponent, children: [

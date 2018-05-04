@@ -1,8 +1,8 @@
 <h2>Start Apply Process</h2>
 <p *ngIf="step && step.result"> Step Result : {{ step.result.rc }} - {{ step.result.message }} </p>
-<div class="row">
+<div class="row" *ngIf="step">
   <div class="col-xs-4">
-    <form (ngSubmit)="onApplyCheck(f)" #f="ngForm">
+    <form (ngSubmit)="onApplyCheck(f.value.csi, f.value.zone)" #f="ngForm">
       <div class="form-group">
         <label for="csi">CSI:</label>
         <input

@@ -1,12 +1,11 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {Store} from '@ngrx/store';
-
 import {Subscription} from 'rxjs/Subscription';
 
-import {ApplyStepModel, ProcessStep, StepType} from '../../model/process-step.model';
 import * as ProcessActions from '../../store/process.actions';
 import * as fromApp from '../../../store/app.states';
+import {ApplyStepModel, ProcessStep, StepType} from '../../model/process.model';
 
 /**
  * UI representation of Apply step
@@ -20,15 +19,15 @@ export class StepApplyComponent implements OnInit, OnDestroy {
   step: ApplyStepModel;
   subscription: Subscription;
 
-  constructor(protected router: Router,
-              protected store: Store<fromApp.AppState>) {
+  constructor(private router: Router,
+              private store: Store<fromApp.AppState>) {
   }
 
   ngOnInit() {
     this.subscription = this.store.select('processState')
       .subscribe((data) => {
         console.log('StepApplyComponent.ngOnInit - getting fresh step');
-        this.step = (data.process && data.process.steps) ?
+        this.step = (data.process && data.process.steps && data.process.steps.length > 0) ?
           data.process.steps.find((value: ProcessStep) => value.type === StepType.APPLY) : undefined;
       });
   }
