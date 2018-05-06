@@ -10,6 +10,33 @@ import {StepStartComponent} from './step-start.component';
 import {Process, ProcessStatus, StepType} from '../../model/process.model';
 import {FormsModule} from '@angular/forms';
 
+const startStep = {
+  type: StepType.START,
+  data:  {csi: 'csi', zone: 'zone'},
+  allowNext: true,
+  allowBack: true,
+  status: ProcessStatus.DONE,
+  result: {rc: 0, message: 'CSI and zone verified'}
+};
+
+const startProcess: Process = {
+  id: 'processId',
+  description:  'Initialization done for ' + 'csi' + ':' + 'zone',
+  steps: [
+    startStep
+  ],
+  status: ProcessStatus.DONE,
+  result:  {rc: 0, message: 'CSI and zone verified'}
+};
+
+const emptyStepsProcess: Process = {
+  id: 'processId',
+  description:  'Initialization done for ' + 'csi' + ':' + 'zone',
+  steps: [],
+  status: ProcessStatus.NOT_STARTED,
+  result:  {rc: 0, message: ''}
+};
+
 describe('StepStartComponent', () => {
   let component: StepStartComponent;
   let fixture: ComponentFixture<StepStartComponent>;
@@ -17,34 +44,7 @@ describe('StepStartComponent', () => {
   const routerSpy = jasmine.createSpyObj('Router', ['navigate']);
   let router: Router;
 
-  const startStep = {
-    type: StepType.START,
-    data:  {csi: 'csi', zone: 'zone'},
-    allowNext: true,
-    allowBack: true,
-    status: ProcessStatus.DONE,
-    result: {rc: 0, message: 'CSI znd zone verified'}
-  };
-
-  const startProcess: Process = {
-    id: 'processId',
-    description:  'Initialization done for ' + 'csi' + ':' + 'zone',
-    steps: [
-      startStep
-    ],
-    status: ProcessStatus.DONE,
-    result:  {rc: 0, message: 'CSI znd zone verified'}
-  };
-
-  const emptyStepsProcess: Process = {
-    id: 'processId',
-    description:  'Initialization done for ' + 'csi' + ':' + 'zone',
-    steps: [],
-    status: ProcessStatus.NOT_STARTED,
-    result:  {rc: 0, message: ''}
-  };
-
-  beforeEach(async(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [StepStartComponent],
       imports: [
@@ -56,58 +56,56 @@ describe('StepStartComponent', () => {
         { provide: Router, useValue: routerSpy }
       ]
     });
-  }));
-
-  beforeEach(() => {
     fixture = TestBed.createComponent(StepStartComponent);
     component = fixture.componentInstance;
     store = <Store<fromApp.AppState>>fixture.debugElement.injector.get(Store);
     spyOn(store, 'dispatch').and.callThrough();
   });
 
-  it('should be created', async(() => {
+  it('should be created', () => {
     expect(component).toBeTruthy();
-  }));
+  });
 
-  it('store to be defined', async(() => {
+  it('store to be defined', () => {
     expect(store).toBeDefined();
-  }));
+  });
 
-  it('step data is undefined if store was not initialized', async(() => {
+  it('step is undefined if store was not initialized', () => {
     expect(component.step).not.toBeDefined();
-  }));
+    const processElement: HTMLElement = fixture.nativeElement;
+    expect(processElement.textContent).not.toContain('Step Result');
+  });
 
-  it('step data is undefined if store was initialized with empty process', async(() => {
+  it('step is undefined if store was initialized with empty process', () => {
     store.dispatch(new ProcessActions.UpdateProcessInStore(emptyStepsProcess));
     fixture.detectChanges();
     expect(component.step).not.toBeDefined();
-  }));
+  });
 
-  it('step data is there in component', async(() => {
+  it('step is there in component', () => {
     store.dispatch(new ProcessActions.UpdateProcessInStore(startProcess));
     fixture.detectChanges();
+    const processElement: HTMLElement = fixture.nativeElement;
+    expect(processElement.textContent).toContain(component.step.result.message);
     expect(component.step).toBeDefined();
     expect(component.step).toBe(startStep);
-  }));
+  });
 
   it('should dispatch an action to delete data when cancel', () => {
+    component.onCancel();
     const expectedAction = new ProcessActions.DeleteProcessFromStore();
     const expectedRoute = ['/home'];
-
-    component.onCancel();
-
     // get args passed to router.navigate() spy
     router = fixture.debugElement.injector.get(Router);
     const spy = router.navigate as jasmine.Spy;
     const navArgs = spy.calls.first().args[0];
-
     expect(store.dispatch).toHaveBeenCalledWith(expectedAction);
     expect(navArgs).toEqual(expectedRoute);
   });
 
   it('should dispatch an action to get data onApplyCheck', () => {
-    const expectedAction = new ProcessActions.PostProcess({csi: 'csi', zone: 'zone'});
     component.onApplyCheck('csi', 'zone');
+    const expectedAction = new ProcessActions.PostProcess({csi: 'csi', zone: 'zone'});
     expect(store.dispatch).toHaveBeenCalledWith(expectedAction);
   });
 });

@@ -64,7 +64,7 @@ describe('ProcessComponent', () => {
   const routerSpy = jasmine.createSpyObj('Router', ['navigate']);
   let router: Router;
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [ProcessComponent],
       imports: [
@@ -75,70 +75,57 @@ describe('ProcessComponent', () => {
         { provide: Router, useValue: routerSpy }
       ]
     });
-  }));
-
-  beforeEach(() => {
     fixture = TestBed.createComponent(ProcessComponent);
     component = fixture.componentInstance;
     store = <Store<fromApp.AppState>>fixture.debugElement.injector.get(Store);
-    spyOn(store, 'dispatch').and.callThrough();
   });
 
-  it('should be created', async(() => {
+  it('should be created', () => {
     expect(component).toBeTruthy();
-  }));
+  });
 
-  it('store to be defined', async(() => {
+  it('store to be defined', () => {
     expect(store).toBeDefined();
-  }));
+  });
 
-  it('step data is undefined if store was not initialized', async(() => {
+  it('process data is undefined if store was not initialized', () => {
     expect(component.process).not.toBeDefined();
-  }));
+  });
 
-  it('step data is undefined if store was initialized with empty process', async(() => {
+  it('process is there in the component if store was initialized with empty process', () => {
     store.dispatch(new ProcessActions.UpdateProcessInStore(emptyStepsProcess));
     fixture.detectChanges();
+    const processElement: HTMLElement = fixture.nativeElement;
     expect(component.process).toBeDefined();
     expect(component.process).toEqual(emptyStepsProcess);
-  }));
+    expect(processElement.textContent).toContain(component.process.id);
+  });
 
-  it('step data is there in component', async(() => {
-    store.dispatch(new ProcessActions.UpdateProcessInStore(emptyStepsProcess));
-    fixture.detectChanges();
-    expect(component.process).toBeDefined();
-    expect(component.process).toBe(emptyStepsProcess);
-  }));
-
-  it('should navigate to start page if store is empty', async(() => {
+  it('should navigate to start page if store is empty', () => {
     store.dispatch(new ProcessActions.UpdateProcessInStore(applyCheckProcess));
     fixture.detectChanges();
-
-    const expectedRoute = ['process', StepType.toRoute(StepType.APPLY_CHECK)];
-
     router = fixture.debugElement.injector.get(Router);
     const spy = router.navigate as jasmine.Spy;
     const navArgs = spy.calls.mostRecent().args;
+    const expectedRoute = ['process', StepType.toRoute(StepType.APPLY_CHECK)];
     expect(navArgs[0]).toEqual(expectedRoute);
-  }));
+  });
 
-  it('should navigate to error page if current step contains error message', async(() => {
+  it('should navigate to error page if current step contains error message', () => {
     store.dispatch(new ProcessActions.UpdateProcessInStore(errorProcess));
     fixture.detectChanges();
-
-    const expectedRoute = ['process', StepType.toRoute(StepType.ERROR)];
-
     router = fixture.debugElement.injector.get(Router);
     const spy = router.navigate as jasmine.Spy;
     const navArgs = spy.calls.mostRecent().args;
+    const expectedRoute = ['process', StepType.toRoute(StepType.ERROR)];
     expect(navArgs[0]).toEqual(expectedRoute);
-  }));
+  });
 });
 
 describe('ProcessComponent constructor', () => {
   const routerSpy = jasmine.createSpyObj('Router', ['navigate']);
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [ProcessComponent],
       imports: [
@@ -149,18 +136,18 @@ describe('ProcessComponent constructor', () => {
         { provide: Router, useValue: routerSpy }
       ]
     });
-  }));
+  });
 
-  it('should create new process if store is empty', async(() => {
+  it('should create new process if store is empty', () => {
     const store = TestBed.get(Store);
     spyOn(store, 'dispatch').and.callThrough();
 
     const component = new ProcessComponent(store, undefined);
     const action = new ProcessActions.PostProcess({csi: '', zone: ''});
     expect(store.dispatch).toHaveBeenCalledWith(action);
-  }));
+  });
 
-  it('should not create new process if store is already initialized', async(() => {
+  it('should not create new process if store is already initialized', () => {
     const store = TestBed.get(Store);
     spyOn(store, 'dispatch').and.callThrough();
     store.dispatch(new ProcessActions.UpdateProcessInStore(emptyStepsProcess));
@@ -168,5 +155,5 @@ describe('ProcessComponent constructor', () => {
     const component = new ProcessComponent(store, undefined);
     const action = new ProcessActions.PostProcess({csi: '', zone: ''});
     expect(store.dispatch).not.toHaveBeenCalledWith(action);
-  }));
+  });
 });

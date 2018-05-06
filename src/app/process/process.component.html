@@ -2,10 +2,10 @@
   <div class="col-xs-12">
     <div *ngIf="process">
       <p> Apply Wizard. [Process ID : {{ process.id }}]</p>
-      <p> Description : {{ process.description }} | Status : {{ process.status }} </p>
-      <div *ngIf="!process">
-        <p> Input data to start Apply Wizard</p>
-      </div>
+      <p> Description : {{ process.description }} | Status : {{ process.status }} </p>     
+    </div>
+    <div *ngIf="!process">
+      <p> Input data to start Apply Wizard</p>
     </div>
   </div>
 </div>
