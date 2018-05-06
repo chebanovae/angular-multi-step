@@ -101,8 +101,6 @@ describe('StepApplyCheckComponent', () => {
     expect(component.step).not.toBeDefined();
   }));
 
-
-
   it('step data is there in component', async(() => {
     store.dispatch(new ProcessActions.UpdateProcessInStore(applyCheckProcess));
     fixture.detectChanges();

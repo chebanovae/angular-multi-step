@@ -39,15 +39,14 @@ export class StepErrorComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     console.log('StepErrorComponent.ngOnDestroy');
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
+    this.subscription.unsubscribe();
   }
 
   /**
    * Close action should remove process from store and redirect to home page
    */
   onClose() {
+    console.log('StepErrorComponent.onClose');
     this.store.dispatch(new ProcessActions.DeleteProcessFromStore());
     this.router.navigate(['/home']);
   }

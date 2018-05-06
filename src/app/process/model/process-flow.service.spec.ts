@@ -57,7 +57,7 @@ describe('ProcessFlow', () => {
     expect(result).toEqual(StepType.toRoute(StepType.START));
   });
 
-  it('should route to APPLY_CHECK step if array of step provided', () => {
+  it('should route to APPLY_CHECK step', () => {
     const steps: ProcessStep[] = [
       startStepSuccess,
       processHolddata2
@@ -66,7 +66,7 @@ describe('ProcessFlow', () => {
     expect(result).toEqual(StepType.toRoute(StepType.APPLY_CHECK));
   });
 
-  it('should route to APPLY step if array of step provided', () => {
+  it('should route to APPLY step', () => {
     const steps: ProcessStep[] = [
       startStepSuccess,
       processHolddata2,
@@ -76,7 +76,7 @@ describe('ProcessFlow', () => {
     expect(result).toEqual(StepType.toRoute(StepType.APPLY));
   });
 
-  it('should route to ERROR step if last step has an error defined', () => {
+  it('should route to ERROR step if last step has an error field defined', () => {
     const steps: ProcessStep[] = [
       startStepSuccess,
       processHolddataError
@@ -84,7 +84,4 @@ describe('ProcessFlow', () => {
     const result = ProcessFlow.getNextRoute(steps);
     expect(result).toEqual(StepType.toRoute(StepType.ERROR));
   });
-
 });
-
-

@@ -35,7 +35,7 @@ export class ProcessComponent implements OnInit, OnDestroy {
           // Create new empty process
           this.store.dispatch(new ProcessActions.PostProcess({csi: '', zone: ''}));
         } else {
-          console.log('ProcessComponent.constructor - process already exists, proceed to initialization');
+          console.log('ProcessComponent.constructor - process already exists, proceed');
         }
       });
   }
@@ -43,12 +43,10 @@ export class ProcessComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.subscription = this.store.select('processState')
       .subscribe((data: fromProcess.State) => {
-        console.log('ProcessComponent.ngOnInit - get fresh process');
+        console.log('ProcessComponent.ngOnInit - refresh process');
         this.process = data.process;
-        if (this.process && this.process.steps) {
-          console.log('ProcessComponent.ngOnInit - display process');
+        if (this.process) {
           const routeName = ProcessFlow.getNextRoute(this.process.steps);
-          console.log('ProcessComponent.ngOnInit - navigate to next step: ' + routeName);
           this.router.navigate(['process', routeName]);
         }
       });

@@ -26,7 +26,7 @@ export class StepApplyComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.subscription = this.store.select('processState')
       .subscribe((data) => {
-        console.log('StepApplyComponent.ngOnInit - getting fresh step');
+        console.log('StepApplyComponent.ngOnInit - refresh step');
         this.step = (data.process && data.process.steps && data.process.steps.length > 0) ?
           data.process.steps.find((value: ProcessStep) => value.type === StepType.APPLY) : undefined;
       });
@@ -41,6 +41,7 @@ export class StepApplyComponent implements OnInit, OnDestroy {
    * Close action should remove process from store and redirect to home page
    */
   onClose() {
+    console.log('StepApplyComponent.onClose');
     this.store.dispatch(new ProcessActions.DeleteProcessFromStore());
     this.router.navigate(['/home']);
   }

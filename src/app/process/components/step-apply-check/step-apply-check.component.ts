@@ -30,7 +30,7 @@ export class StepApplyCheckComponent implements OnInit, OnDestroy  {
   ngOnInit() {
     this.subscription = this.store.select('processState')
       .subscribe((data: fromProcess.State) => {
-        console.log('StepApplyCheckComponent.ngOnInit - getting fresh step');
+        console.log('StepApplyCheckComponent.ngOnInit - refresh step');
         this.processId = data.process ? data.process.id : undefined;
         this.step = (data.process && data.process.steps && data.process.steps.length > 0) ?
           data.process.steps.find((value: ProcessStep) => value.type === StepType.APPLY_CHECK) : undefined;
@@ -46,6 +46,7 @@ export class StepApplyCheckComponent implements OnInit, OnDestroy  {
    * Apply check action should fetch current status of a process from server
    */
   onApplyCheck() {
+    console.log('StepApplyCheckComponent.onApplyCheck');
     this.store.dispatch(new ProcessActions.GetProcess(this.processId));
   }
 
@@ -53,6 +54,7 @@ export class StepApplyCheckComponent implements OnInit, OnDestroy  {
    * Apply action should trigger Apply action for a process
    */
   onApply() {
+    console.log('StepApplyCheckComponent.onApply');
     this.store.dispatch(new ProcessActions.PutProcess(this.processId));
   }
 
@@ -60,6 +62,7 @@ export class StepApplyCheckComponent implements OnInit, OnDestroy  {
    * Go to previous step
    */
   onBack() {
+    console.log('StepApplyCheckComponent.onBack');
     this.router.navigate(['../', StepType.toRoute(StepType.START)], {relativeTo: this.route});
   }
 }

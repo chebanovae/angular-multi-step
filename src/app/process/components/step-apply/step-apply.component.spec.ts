@@ -45,7 +45,7 @@ describe('StepApplyComponent', () => {
     result:  {rc: 0, message: ''}
   };
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [StepApplyComponent],
       imports: [
@@ -56,9 +56,6 @@ describe('StepApplyComponent', () => {
         { provide: Router, useValue: routerSpy }
       ]
     });
-  }));
-
-  beforeEach(() => {
     fixture = TestBed.createComponent(StepApplyComponent);
     component = fixture.componentInstance;
     store = <Store<fromApp.AppState>>fixture.debugElement.injector.get(Store);
@@ -73,17 +70,17 @@ describe('StepApplyComponent', () => {
     expect(store).toBeDefined();
   }));
 
-  it('step data is undefined if store was not initialized', async(() => {
+  it('step is undefined if store was not initialized', async(() => {
     expect(component.step).not.toBeDefined();
   }));
 
-  it('step data is undefined if store was initialized with empty process', async(() => {
+  it('step is undefined if store was initialized with empty process', async(() => {
     store.dispatch(new ProcessActions.UpdateProcessInStore(emptyProcess));
     fixture.detectChanges();
     expect(component.step).toEqual(undefined);
   }));
 
-  it('step data is there in component', async(() => {
+  it('step is there in component', async(() => {
     store.dispatch(new ProcessActions.UpdateProcessInStore(applyProcess));
     fixture.detectChanges();
     expect(component.step).toBeDefined();
@@ -91,15 +88,15 @@ describe('StepApplyComponent', () => {
   }));
 
   it('should dispatch an action to delete data when closing', () => {
-    const expectedAction = new ProcessActions.DeleteProcessFromStore();
-    const expectedRoute = ['/home'];
-
     component.onClose();
 
     // get args passed to router.navigate() spy
     router = fixture.debugElement.injector.get(Router);
     const spy = router.navigate as jasmine.Spy;
     const navArgs = spy.calls.first().args[0];
+
+    const expectedAction = new ProcessActions.DeleteProcessFromStore();
+    const expectedRoute = ['/home'];
 
     expect(store.dispatch).toHaveBeenCalledWith(expectedAction);
     expect(navArgs).toEqual(expectedRoute);

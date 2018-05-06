@@ -6,13 +6,32 @@ import {RouterTestingModule} from '@angular/router/testing';
 import * as fromApp from '../store/app.states';
 import * as ProcessActions from './store/process.actions';
 import {reducers} from '../store/app.states';
-import {Process, ProcessStatus} from './model/process.model';
+import {Process, ProcessStatus, StepType} from './model/process.model';
 import {ProcessComponent} from './process.component';
 import {ProcessFlow} from './model/process-flow.service';
 
-/*class MockActivatedRoute {
-  snapshot: { url: { path: '/process'} };
-}*/
+const applyCheckStep = {
+  type: StepType.APPLY_CHECK,
+  data: {
+    holddata: ['holddata 1', 'holddata 2'], postholddata: ['holddata 1', 'holddata 2']
+  },
+  allowNext: true,
+  allowBack: true,
+  status: ProcessStatus.IN_PROGRESS,
+  result: {rc: 8, message: 'Apply check failed. Resolve holddata'}
+};
+
+const errorStep = {
+  type: StepType.APPLY_CHECK,
+  data: {
+    holddata: ['holddata 1', 'holddata 2'], postholddata: ['holddata 1', 'holddata 2']
+  },
+  allowNext: true,
+  allowBack: true,
+  status: ProcessStatus.IN_PROGRESS,
+  result: {rc: 8, message: 'Apply check failed. Resolve holddata'},
+  error: 'Something went wrong'
+};
 
 const emptyStepsProcess: Process = {
   id: 'processId',
@@ -22,12 +41,28 @@ const emptyStepsProcess: Process = {
   result:  {rc: 0, message: ''}
 };
 
+const applyCheckProcess: Process = {
+  id: 'processId',
+  description:  'Apply check in progress',
+  steps: [applyCheckStep],
+  status: ProcessStatus.IN_PROGRESS,
+  result:  {rc: 0, message: ''}
+};
+
+const errorProcess: Process = {
+  id: 'processId',
+  description:  'Apply check in progress',
+  steps: [errorStep],
+  status: ProcessStatus.DONE,
+  result:  {rc: 0, message: ''}
+};
+
 describe('ProcessComponent', () => {
   let component: ProcessComponent;
   let fixture: ComponentFixture<ProcessComponent>;
   let store: Store<fromApp.AppState>;
   const routerSpy = jasmine.createSpyObj('Router', ['navigate']);
-  // let router: Router;
+  let router: Router;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -37,9 +72,7 @@ describe('ProcessComponent', () => {
         StoreModule.forRoot(reducers)
       ],
       providers: [
-        ProcessFlow,
-        { provide: Router, useValue: routerSpy },
-        // { provide: ActivatedRoute, useClass: MockActivatedRoute }
+        { provide: Router, useValue: routerSpy }
       ]
     });
   }));
@@ -77,7 +110,29 @@ describe('ProcessComponent', () => {
     expect(component.process).toBe(emptyStepsProcess);
   }));
 
+  it('should navigate to start page if store is empty', async(() => {
+    store.dispatch(new ProcessActions.UpdateProcessInStore(applyCheckProcess));
+    fixture.detectChanges();
 
+    const expectedRoute = ['process', StepType.toRoute(StepType.APPLY_CHECK)];
+
+    router = fixture.debugElement.injector.get(Router);
+    const spy = router.navigate as jasmine.Spy;
+    const navArgs = spy.calls.mostRecent().args;
+    expect(navArgs[0]).toEqual(expectedRoute);
+  }));
+
+  it('should navigate to error page if current step contains error message', async(() => {
+    store.dispatch(new ProcessActions.UpdateProcessInStore(errorProcess));
+    fixture.detectChanges();
+
+    const expectedRoute = ['process', StepType.toRoute(StepType.ERROR)];
+
+    router = fixture.debugElement.injector.get(Router);
+    const spy = router.navigate as jasmine.Spy;
+    const navArgs = spy.calls.mostRecent().args;
+    expect(navArgs[0]).toEqual(expectedRoute);
+  }));
 });
 
 describe('ProcessComponent constructor', () => {
@@ -91,8 +146,7 @@ describe('ProcessComponent constructor', () => {
         StoreModule.forRoot(reducers)
       ],
       providers: [
-        { provide: Router, useValue: routerSpy },
-        // { provide: ActivatedRoute, useClass: MockActivatedRoute }
+        { provide: Router, useValue: routerSpy }
       ]
     });
   }));
@@ -104,25 +158,6 @@ describe('ProcessComponent constructor', () => {
     const component = new ProcessComponent(store, undefined);
     const action = new ProcessActions.PostProcess({csi: '', zone: ''});
     expect(store.dispatch).toHaveBeenCalledWith(action);
-  }));
-});
-
-describe('ProcessComponent constructor', () => {
-  const routerSpy = jasmine.createSpyObj('Router', ['navigate']);
-
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ProcessComponent],
-      imports: [
-        RouterTestingModule,
-        StoreModule.forRoot(reducers)
-      ],
-      providers: [
-        // ProcessFlow,
-        { provide: Router, useValue: routerSpy },
-        // { provide: ActivatedRoute, useClass: MockActivatedRoute }
-      ]
-    });
   }));
 
   it('should not create new process if store is already initialized', async(() => {

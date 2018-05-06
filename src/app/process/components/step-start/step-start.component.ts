@@ -28,10 +28,9 @@ export class StepStartComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    console.log('StepStartComponent.ngOnInit');
     this.subscription = this.store.select('processState')
       .subscribe((data: fromProcess.State) => {
-        console.log('StepStartComponent.ngOnInit - getting fresh step');
+        console.log('StepStartComponent.ngOnInit - refresh step');
         this.step = (data.process && data.process.steps  && data.process.steps.length > 0) ?
           data.process.steps.find((value: ProcessStep) => value.type === StepType.START) : undefined;
       });
@@ -39,15 +38,14 @@ export class StepStartComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     console.log('StepStartComponent.ngOnDestroy');
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
+    this.subscription.unsubscribe();
   }
 
   /**
    * Submit action should trigger creation of a process based on user input
    */
   onApplyCheck(csi: string, zone: string) {
+    console.log('StepStartComponent.onApplyCheck: ' + csi + ':' + zone);
     this.store.dispatch(new ProcessActions.PostProcess({csi: csi, zone: zone}));
   }
 
