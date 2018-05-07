@@ -1,4 +1,4 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {Router} from '@angular/router';
 import {Store, StoreModule} from '@ngrx/store';
 import {RouterTestingModule} from '@angular/router/testing';
@@ -60,6 +60,7 @@ describe('StepStartComponent', () => {
     component = fixture.componentInstance;
     store = <Store<fromApp.AppState>>fixture.debugElement.injector.get(Store);
     spyOn(store, 'dispatch').and.callThrough();
+    fixture.detectChanges();
   });
 
   it('should be created', () => {

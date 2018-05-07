@@ -29,7 +29,6 @@ export class StepErrorComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.subscription = this.store.select('processState')
-      .take(1)
       .subscribe((data: fromProcess.State) => {
         console.log('StepErrorComponent.ngOnInit - refresh step');
         this.step = (data.process && data.process.steps && data.process.steps.length > 0)

@@ -1,4 +1,4 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {Store, StoreModule} from '@ngrx/store';
 import {RouterTestingModule} from '@angular/router/testing';
 
@@ -59,6 +59,7 @@ describe('StepErrorComponent', () => {
     component = fixture.componentInstance;
     store = <Store<fromApp.AppState>>fixture.debugElement.injector.get(Store);
     spyOn(store, 'dispatch').and.callThrough();
+    fixture.detectChanges();
   });
 
   it('should be created', () => {
@@ -69,17 +70,17 @@ describe('StepErrorComponent', () => {
     expect(store).toBeDefined();
   });
 
-  it('step data is undefined if store was not initialized', () => {
+  it('step is undefined if store was not initialized', () => {
     expect(component.step).not.toBeDefined();
   });
 
-  it('step data is undefined if store was initialized with empty process', () => {
+  it('step is undefined if store was initialized with empty process', () => {
     store.dispatch(new ProcessActions.UpdateProcessInStore(emptyProcess));
     fixture.detectChanges();
     expect(component.step).toEqual(undefined);
   });
 
-  it('step data is there in component', () => {
+  it('step is there in component', () => {
     store.dispatch(new ProcessActions.UpdateProcessInStore(errorProcess));
     fixture.detectChanges();
     const stepElement: HTMLElement = fixture.nativeElement;

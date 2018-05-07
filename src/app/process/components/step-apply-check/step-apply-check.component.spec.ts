@@ -1,4 +1,4 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Store, StoreModule} from '@ngrx/store';
 import {RouterTestingModule} from '@angular/router/testing';
@@ -8,6 +8,7 @@ import * as fromApp from '../../../store/app.states';
 import {reducers} from '../../../store/app.states';
 import {StepApplyCheckComponent} from './step-apply-check.component';
 import {Process, ProcessStatus, StepType} from '../../model/process.model';
+
 class MockActivatedRoute {
     snapshot: { url: { path: '/process'} };
 }
@@ -67,6 +68,7 @@ describe('StepApplyCheckComponent', () => {
     component = fixture.componentInstance;
     store = <Store<fromApp.AppState>>fixture.debugElement.injector.get(Store);
     spyOn(store, 'dispatch').and.callThrough();
+    fixture.detectChanges();
   });
 
   it('should be created', () => {
@@ -77,12 +79,12 @@ describe('StepApplyCheckComponent', () => {
     expect(store).toBeDefined();
   });
 
-  it('step data is undefined if store was not initialized', () => {
+  it('step is undefined if store was not initialized', () => {
     expect(component.step).not.toBeDefined();
     expect(component.processId).not.toBeDefined();
   });
 
-  it('step data is undefined if store was initialized with empty process', () => {
+  it('step is undefined if store was initialized with empty process', () => {
     store.dispatch(new ProcessActions.UpdateProcessInStore(emptyStepsProcess));
     store.dispatch(new ProcessActions.DeleteProcessFromStore());
     fixture.detectChanges();
@@ -90,14 +92,14 @@ describe('StepApplyCheckComponent', () => {
     expect(component.step).not.toBeDefined();
   });
 
-  it('step data is undefined if store was initialized with empty process', () => {
+  it('step is undefined if store was initialized with empty process', () => {
     store.dispatch(new ProcessActions.UpdateProcessInStore(emptyStepsProcess));
     fixture.detectChanges();
     expect(component.processId).toEqual(emptyStepsProcess.id);
     expect(component.step).not.toBeDefined();
   });
 
-  it('step data is there in component', () => {
+  it('step is there in component', () => {
     store.dispatch(new ProcessActions.UpdateProcessInStore(applyCheckProcess));
     fixture.detectChanges();
     expect(component.processId).toEqual(applyCheckProcess.id);
