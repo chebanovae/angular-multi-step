@@ -23,15 +23,18 @@ export class AppComponent {
   }
 
   onGetApply() {
-    this.showProcess(this.processService.getApplyDone('csi1', 'zone1'));
+    this.processService.getApplyDone('csi1', 'zone1')
+      .subscribe(process => this.showProcess(process));
   }
 
   onGetApplyCheckDone() {
-    this.showProcess(this.processService.getApplyCheckDone('csi1', 'zone1'));
+    this.processService.getApplyCheckDone('csi1', 'zone1')
+      .subscribe(process => this.showProcess(process));
   }
 
   onGetApplyCheckFailed() {
-    this.showProcess(this.processService.getApplyCheckFailed('csi1', 'zone1'));
+    this.processService.getApplyCheckFailed('csi1', 'zone1')
+      .subscribe(process => this.showProcess(process));
   }
 
 }

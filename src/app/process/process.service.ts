@@ -1,5 +1,8 @@
 import {Process, ProcessStatus, ApplyStepModel, ApplyCheckStepModel, ProcessStep, StepType} from './model/process.model';
+import {Observable} from 'rxjs/Observable';
 
+import 'rxjs/add/observable/of';
+import 'rxjs/add/operator/delay';
 /**
  * This class mocks backend for process service.
  * Don't test it
@@ -62,7 +65,8 @@ export class ProcessService {
     };
   }
 
-  post(csi: string, zone: string) {
+  post(csi: string, zone: string): Observable<Process> {
+
     const processId = (Math.random() * 1000000).toString().substring(1, 6);
     this.data.set(processId, {csi: csi, zone: zone});
     const steps: ProcessStep[] = [];
@@ -90,10 +94,10 @@ export class ProcessService {
 
     this.procs.set(processId, p);
 
-    return p;
+    return Observable.of(p).delay(2000);
   }
 
-  get(processId: string) {
+  get(processId: string): Observable<Process> {
     let p: Process;
     this.refreshCounter = this.refreshCounter > 2 ? this.refreshCounter = 0 : this.refreshCounter = this.refreshCounter + 1;
     switch (this.refreshCounter) {
@@ -107,10 +111,10 @@ export class ProcessService {
         p = this.getProcessResolved(processId);
     }
     this.procs.set(processId, p);
-    return this.procs.get(processId);
+    return Observable.of(this.procs.get(processId)).delay(2000);
   }
 
-  put(processId: string): Process {
+  put(processId: string): Observable<Process> {
     const p = this.procs.get(processId);
 
     if (!p.steps.find((value) => value.type === StepType.APPLY_CHECK)) {
@@ -119,7 +123,7 @@ export class ProcessService {
       p.steps.push(ProcessService.getDoneStep());
     }
 
-    return p;
+    return Observable.of(p).delay(2000);
   }
 
   /*putWithBody(processId: string): Process {
@@ -132,7 +136,7 @@ export class ProcessService {
     return p;
   }*/
 
-  getApplyDone(csi: string, zone: string) {
+  getApplyDone(csi: string, zone: string):Observable<Process> {
     const steps: ProcessStep[] = [];
     const processId = (Math.random() * 1000000).toString().substring(1, 6);
     this.data.set(processId, {csi: csi, zone: zone});
@@ -162,10 +166,10 @@ export class ProcessService {
     };
     this.procs.set(processId, p);
 
-    return p;
+    return Observable.of(p).delay(2000);
   }
 
-  getApplyCheckDone(csi: string, zone: string) {
+  getApplyCheckDone(csi: string, zone: string): Observable<Process> {
     const steps: ProcessStep[] = [];
     const processId = (Math.random() * 1000000).toString().substring(1, 6);
     this.data.set(processId, {csi: csi, zone: zone});
@@ -194,10 +198,10 @@ export class ProcessService {
     };
     this.procs.set(processId, p);
 
-    return p;
+    return Observable.of(p).delay(2000);
   }
 
-  getApplyCheckFailed(csi: string, zone: string) {
+  getApplyCheckFailed(csi: string, zone: string): Observable<Process> {
     const steps: ProcessStep[] = [];
     const processId = (Math.random() * 1000000).toString().substring(1, 6);
     this.data.set(processId, {csi: csi, zone: zone});
@@ -226,7 +230,7 @@ export class ProcessService {
     };
     this.procs.set(processId, p);
 
-    return p;
+    return Observable.of(p).delay(2000);
   }
 
   /**
